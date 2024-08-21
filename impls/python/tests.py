@@ -113,14 +113,24 @@ def test_remove_element_transformation():
     assert "age" not in result["person"]
 
 def test_modify_text_transformation():
-    data = {"person": {"name": "john doe"}}
+    data = {
+        "person": {
+            "name": "john doe",
+            "description": "  software engineer  ",
+            "email": "john.doe@example.com"
+        }
+    }
     jsonlt_conf = {
         "transformations": [
-            {"type": "modify_text", "target": "person.name", "modification": "title"}
+            {"type": "modify_text", "target": "person.name", "modification": "title"},
+            {"type": "modify_text", "target": "person.description", "modification": "strip"},
+            {"type": "modify_text", "target": "person.email", "modification": "replace", "replace_old": "@example.com", "replace_new": "@company.com"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
     assert result["person"]["name"] == "John Doe"
+    assert result["person"]["description"] == "software engineer"
+    assert result["person"]["email"] == "john.doe@company.com"
 
 def test_copy_structure_transformation():
     data = {"name": "John Doe", "age": 30}
