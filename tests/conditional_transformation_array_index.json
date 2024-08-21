@@ -1,0 +1,43 @@
+{
+  "input": {
+    "people": [
+      {"name": "Alice", "age": 30},
+      {"name": "Bob", "age": 25},
+      {"name": "Charlie", "age": 35},
+      {"name": "David", "age": 40}
+    ]
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "conditional",
+        "path": "people[2]",
+        "condition": {
+          "operator": "gt",
+          "left": "age",
+          "right": 30
+        },
+        "true_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "senior"
+        },
+        "false_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "junior"
+        }
+      }
+    ]
+  },
+  "output": {
+    "people": [
+      {"name": "Alice", "age": 30},
+      {"name": "Bob", "age": 25},
+      {"name": "Charlie", "age": 35, "status": "senior"},
+      {"name": "David", "age": 40}
+    ]
+  }
+}
