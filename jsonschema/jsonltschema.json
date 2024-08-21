@@ -27,6 +27,58 @@
       "title": "AddElementTransformation",
       "type": "object"
     },
+    "Condition": {
+      "description": "Model for condition representation",
+      "properties": {
+        "operator": {
+          "enum": [
+            "eq",
+            "ne",
+            "gt",
+            "lt",
+            "ge",
+            "le",
+            "and",
+            "or",
+            "not"
+          ],
+          "title": "Operator",
+          "type": "string"
+        },
+        "left": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/Condition"
+            }
+          ],
+          "title": "Left"
+        },
+        "right": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/Condition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Right"
+        }
+      },
+      "required": [
+        "operator",
+        "left"
+      ],
+      "title": "Condition",
+      "type": "object"
+    },
     "ConditionalTransformation": {
       "description": "Model for applying transformations conditionally",
       "properties": {
@@ -40,8 +92,7 @@
           "type": "string"
         },
         "condition": {
-          "title": "Condition",
-          "type": "string"
+          "$ref": "#/$defs/Condition"
         },
         "true_transformation": {
           "anyOf": [
