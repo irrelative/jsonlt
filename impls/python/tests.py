@@ -157,3 +157,59 @@ def test_group_transformation():
     assert "HR" in result["grouped_employees"]
     assert len(result["grouped_employees"]["IT"]) == 2
     assert len(result["grouped_employees"]["HR"]) == 1
+
+def test_apply_path_root():
+    data = {"name": "John", "age": 30}
+    jsonlt_conf = {
+        "transformations": [
+            {"type": "add", "path": ".", "target": "occupation", "value": "Engineer"}
+        ]
+    }
+    result = jsonlt_transform(data, jsonlt_conf)
+    assert "occupation" in result
+    assert result["occupation"] == "Engineer"
+
+def test_apply_path_nested():
+    data = {"person": {"name": "John", "age": 30}}
+    jsonlt_conf = {
+        "transformations": [
+            {"type": "add", "path": ".person", "target": "occupation", "value": "Engineer"}
+        ]
+    }
+    result = jsonlt_transform(data, jsonlt_conf)
+    assert "occupation" in result["person"]
+    assert result["person"]["occupation"] == "Engineer"
+
+def test_apply_path_array():
+    data = {"people": [{"name": "John"}, {"name": "Alice"}]}
+    jsonlt_conf = {
+        "transformations": [
+            {"type": "add", "path": ".people[]", "target": "age", "value": 30}
+        ]
+    }
+    result = jsonlt_transform(data, jsonlt_conf)
+    assert all("age" in person for person in result["people"])
+    assert all(person["age"] == 30 for person in result["people"])
+
+def test_apply_path_array_index():
+    data = {"people": [{"name": "John"}, {"name": "Alice"}]}
+    jsonlt_conf = {
+        "transformations": [
+            {"type": "add", "path": ".people[0]", "target": "age", "value": 30}
+        ]
+    }
+    result = jsonlt_transform(data, jsonlt_conf)
+    assert "age" in result["people"][0]
+    assert result["people"][0]["age"] == 30
+    assert "age" not in result["people"][1]
+
+def test_apply_path_deep_nested():
+    data = {"company": {"departments": {"IT": {"employees": [{"name": "John"}]}}}}
+    jsonlt_conf = {
+        "transformations": [
+            {"type": "add", "path": ".company.departments.IT.employees[]", "target": "role", "value": "Developer"}
+        ]
+    }
+    result = jsonlt_transform(data, jsonlt_conf)
+    assert "role" in result["company"]["departments"]["IT"]["employees"][0]
+    assert result["company"]["departments"]["IT"]["employees"][0]["role"] == "Developer"
