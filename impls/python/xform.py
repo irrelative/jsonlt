@@ -4,6 +4,7 @@ from schema_gen import JSONLT, Condition
 from typing import Any, Dict, List, Union, Optional
 import copy
 import operator
+from functools import reduce
 
 
 def rename_transformation(data: Dict[str, Any], source: str, target: str) -> Dict[str, Any]:
@@ -201,40 +202,71 @@ def group_transformation(data: Dict[str, Any], source: str, target: str, group_b
         del data[source]
     return data
 
+def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -> Dict[str, Any]:
+    if path == ".":
+        return transformation_func(data)
+    
+    parts = path.split(".")
+    current = data
+    for i, part in enumerate(parts[1:]):  # Skip the first empty part
+        if part.endswith("[]"):
+            key = part[:-2]
+            if key in current and isinstance(current[key], list):
+                current[key] = [transformation_func(item) for item in current[key]]
+            return data
+        elif part.endswith("]"):
+            key, index = part[:-1].split("[")
+            index = int(index)
+            if key in current and isinstance(current[key], list) and 0 <= index < len(current[key]):
+                current[key][index] = transformation_func(current[key][index])
+            return data
+        elif i == len(parts) - 2:  # Last part
+            if part in current:
+                current[part] = transformation_func(current[part])
+            return data
+        else:
+            if part not in current:
+                current[part] = {}
+            current = current[part]
+    
+    return data
+
 
 def apply_transformation(data: Dict[str, Any], transformation: Dict[str, Any]) -> Dict[str, Any]:
     transformation_type = transformation['type']
+    path = transformation.get('path', '.')
+
     if transformation_type == 'rename':
-        return rename_transformation(data, transformation['source'], transformation['target'])
+        return apply_path(data, path, lambda x: rename_transformation(x, transformation['source'], transformation['target']))
     elif transformation_type == 'reorder':
-        return reorder_transformation(data, transformation['order'])
+        return apply_path(data, path, lambda x: reorder_transformation(x, transformation['order']))
     elif transformation_type == 'attribute_to_element':
-        return attribute_to_element_transformation(data, transformation['source'], transformation['target'])
+        return apply_path(data, path, lambda x: attribute_to_element_transformation(x, transformation['source'], transformation['target']))
     elif transformation_type == 'element_to_attribute':
-        return element_to_attribute_transformation(data, transformation['source'], transformation['target'])
+        return apply_path(data, path, lambda x: element_to_attribute_transformation(x, transformation['source'], transformation['target']))
     elif transformation_type == 'conditional':
         condition = Condition(**transformation['condition'])
-        return conditional_transformation(data, condition, transformation['true_transformation'], transformation.get('false_transformation'))
+        return apply_path(data, path, lambda x: conditional_transformation(x, condition, transformation['true_transformation'], transformation.get('false_transformation')))
     elif transformation_type == 'merge':
-        return merge_transformation(data, transformation['sources'], transformation['target'])
+        return apply_path(data, path, lambda x: merge_transformation(x, transformation['sources'], transformation['target']))
     elif transformation_type == 'split':
-        return split_transformation(data, transformation['source'], transformation['targets'])
+        return apply_path(data, path, lambda x: split_transformation(x, transformation['source'], transformation['targets']))
     elif transformation_type == 'add':
-        return add_element_transformation(data, transformation['target'], transformation['value'])
+        return apply_path(data, path, lambda x: add_element_transformation(x, transformation['target'], transformation['value']))
     elif transformation_type == 'remove':
-        return remove_element_transformation(data, transformation['target'])
+        return apply_path(data, path, lambda x: remove_element_transformation(x, transformation['target']))
     elif transformation_type == 'modify_text':
-        return modify_text_transformation(
-            data,
+        return apply_path(data, path, lambda x: modify_text_transformation(
+            x,
             transformation['target'],
             transformation['modification'],
             transformation.get('replace_old'),
             transformation.get('replace_new')
-        )
+        ))
     elif transformation_type == 'copy_structure':
-        return copy_structure_transformation(data, transformation['modifications'])
+        return apply_path(data, path, lambda x: copy_structure_transformation(x, transformation['modifications']))
     elif transformation_type == 'group':
-        return group_transformation(data, transformation['source'], transformation['target'], transformation['group_by'])
+        return apply_path(data, path, lambda x: group_transformation(x, transformation['source'], transformation['target'], transformation['group_by']))
     return data
 
 
