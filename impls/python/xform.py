@@ -8,15 +8,9 @@ from functools import reduce
 
 
 def rename_transformation(data: Dict[str, Any], source: str, target: str) -> Dict[str, Any]:
-    new_data = {}
-    for key, value in data.items():
-        if isinstance(value, dict):
-            new_data[key] = rename_transformation(value, source, target)
-        elif key == source:
-            new_data[target] = value
-        else:
-            new_data[key] = value
-    return new_data
+    if source in data:
+        data[target] = data.pop(source)
+    return data
 
 
 def reorder_transformation(data: Dict[str, Any], order: List[str]) -> Dict[str, Any]:
@@ -24,28 +18,16 @@ def reorder_transformation(data: Dict[str, Any], order: List[str]) -> Dict[str, 
 
 
 def attribute_to_element_transformation(data: Dict[str, Any], source: str, target: str) -> Dict[str, Any]:
-    new_data = {}
-    for key, value in data.items():
-        if isinstance(value, dict):
-            new_data[key] = attribute_to_element_transformation(value, source, target)
-        elif key == source:
-            new_data[target] = {source: value}
-        else:
-            new_data[key] = value
-    return new_data
+    if source in data:
+        data[target] = {source: data.pop(source)}
+    return data
 
 
 def element_to_attribute_transformation(data: Dict[str, Any], source: str, target: str) -> Dict[str, Any]:
-    new_data = {}
-    for key, value in data.items():
-        if isinstance(value, dict):
-            if key == source:
-                new_data[target] = next(iter(value.values()))
-            else:
-                new_data[key] = element_to_attribute_transformation(value, source, target)
-        else:
-            new_data[key] = value
-    return new_data
+    if source in data and isinstance(data[source], dict):
+        data[target] = next(iter(data[source].values()))
+        del data[source]
+    return data
 
 
 def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
@@ -138,48 +120,32 @@ def split_transformation(data: Dict[str, Any], source: str, targets: List[str]) 
 
 
 def add_element_transformation(data: Dict[str, Any], target: str, value: Any) -> Dict[str, Any]:
-    def add_recursive(d: Dict[str, Any], path: List[str]) -> Dict[str, Any]:
-        if len(path) == 1:
-            d[path[0]] = value
-        elif path[0] in d:
-            d[path[0]] = add_recursive(d[path[0]], path[1:])
-        else:
-            d[path[0]] = add_recursive({}, path[1:])
-        return d
-    return add_recursive(data, target.split('.'))
+    data[target] = value
+    return data
 
 
 def remove_element_transformation(data: Dict[str, Any], target: str) -> Dict[str, Any]:
-    def remove_recursive(d: Dict[str, Any], path: List[str]) -> Dict[str, Any]:
-        if len(path) == 1:
-            if path[0] in d:
-                del d[path[0]]
-        elif path[0] in d and isinstance(d[path[0]], dict):
-            d[path[0]] = remove_recursive(d[path[0]], path[1:])
-        return d
-    return remove_recursive(data, target.split('.'))
+    if target in data:
+        del data[target]
+    return data
 
 
 def modify_text_transformation(data: Dict[str, Any], target: str, modification: str, replace_old: Optional[str] = None, replace_new: Optional[str] = None) -> Dict[str, Any]:
-    def modify_recursive(d: Dict[str, Any], path: List[str]) -> Dict[str, Any]:
-        if len(path) == 1 and path[0] in d and isinstance(d[path[0]], str):
-            if modification == "uppercase":
-                d[path[0]] = d[path[0]].upper()
-            elif modification == "lowercase":
-                d[path[0]] = d[path[0]].lower()
-            elif modification == "capitalize":
-                d[path[0]] = d[path[0]].capitalize()
-            elif modification == "title":
-                d[path[0]] = d[path[0]].title()
-            elif modification == "strip":
-                d[path[0]] = d[path[0]].strip()
-            elif modification == "replace":
-                if replace_old is not None and replace_new is not None:
-                    d[path[0]] = d[path[0]].replace(replace_old, replace_new)
-        elif path[0] in d and isinstance(d[path[0]], dict):
-            d[path[0]] = modify_recursive(d[path[0]], path[1:])
-        return d
-    return modify_recursive(data, target.split('.'))
+    if target in data and isinstance(data[target], str):
+        if modification == "uppercase":
+            data[target] = data[target].upper()
+        elif modification == "lowercase":
+            data[target] = data[target].lower()
+        elif modification == "capitalize":
+            data[target] = data[target].capitalize()
+        elif modification == "title":
+            data[target] = data[target].title()
+        elif modification == "strip":
+            data[target] = data[target].strip()
+        elif modification == "replace":
+            if replace_old is not None and replace_new is not None:
+                data[target] = data[target].replace(replace_old, replace_new)
+    return data
 
 
 def copy_structure_transformation(data: Dict[str, Any], modifications: List[Dict[str, Any]]) -> Dict[str, Any]:
