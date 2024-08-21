@@ -12,6 +12,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "target": {
           "title": "Target",
           "type": "string"
@@ -89,6 +94,11 @@
             "conditional"
           ],
           "title": "Type",
+          "type": "string"
+        },
+        "path": {
+          "default": ".",
+          "title": "Path",
           "type": "string"
         },
         "condition": {
@@ -200,6 +210,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "source": {
           "title": "Source",
           "type": "string"
@@ -228,6 +243,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "source": {
           "title": "Source",
           "type": "string"
@@ -254,6 +274,11 @@
             "copy_structure"
           ],
           "title": "Type",
+          "type": "string"
+        },
+        "path": {
+          "default": ".",
+          "title": "Path",
           "type": "string"
         },
         "modifications": {
@@ -319,6 +344,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "source": {
           "title": "Source",
           "type": "string"
@@ -352,6 +382,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "sources": {
           "items": {
             "type": "string"
@@ -383,6 +418,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "target": {
           "title": "Target",
           "type": "string"
@@ -404,6 +444,11 @@
             "rename"
           ],
           "title": "Type",
+          "type": "string"
+        },
+        "path": {
+          "default": ".",
+          "title": "Path",
           "type": "string"
         },
         "source": {
@@ -434,6 +479,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "order": {
           "items": {
             "type": "string"
@@ -460,6 +510,11 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "source": {
           "title": "Source",
           "type": "string"
@@ -479,6 +534,18 @@
       "title": "SplitTransformation",
       "type": "object"
     },
+    "TextModification": {
+      "enum": [
+        "uppercase",
+        "lowercase",
+        "capitalize",
+        "title",
+        "strip",
+        "replace"
+      ],
+      "title": "TextModification",
+      "type": "string"
+    },
     "TextModificationTransformation": {
       "description": "Model for modifying text content",
       "properties": {
@@ -491,13 +558,41 @@
           "title": "Type",
           "type": "string"
         },
+        "path": {
+          "default": ".",
+          "title": "Path",
+          "type": "string"
+        },
         "target": {
           "title": "Target",
           "type": "string"
         },
         "modification": {
-          "title": "Modification",
-          "type": "string"
+          "$ref": "#/$defs/TextModification"
+        },
+        "replace_old": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replace Old"
+        },
+        "replace_new": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replace New"
         }
       },
       "required": [
