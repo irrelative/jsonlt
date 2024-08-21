@@ -12,7 +12,7 @@
         "condition": {
           "operator": "gt",
           "left": "age",
-          "right": "18"
+          "right": 18
         },
         "true_transformation": {
           "type": "add",

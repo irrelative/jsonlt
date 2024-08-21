@@ -51,7 +51,8 @@ class Condition(BaseModel):
     """Model for condition representation"""
     operator: Literal["eq", "ne", "gt", "lt", "ge", "le", "and", "or", "not"]
     left: Union[str, "Condition"]
-    right: Optional[Union[str, "Condition"]] = None
+    right: Optional[Union[Any, "Condition"]] = None
+
 
 class ConditionalTransformation(BaseModel):
     """Model for applying transformations conditionally"""

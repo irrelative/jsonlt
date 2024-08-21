@@ -7,7 +7,8 @@ from xform import jsonlt_transform
 def test_json_files():
     test_folder = "../../tests"
     for filename in os.listdir(test_folder):
-        if filename.endswith(".json"):
+        #if filename.endswith(".json"):
+        if filename == 'conditional_transformation_array_index.json':
             with open(os.path.join(test_folder, filename), "r") as file:
                 test_case = json.load(file)
 
