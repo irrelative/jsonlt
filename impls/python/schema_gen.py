@@ -6,7 +6,7 @@ class RenameTransformation(BaseModel):
     """Model for renaming keys or attributes"""
 
     type: Literal["rename"] = "rename"
-    path: Optional[str] = None
+    path: str = "."
     source: str
     target: str
 
@@ -15,7 +15,7 @@ class ReorderTransformation(BaseModel):
     """Model for reordering elements within an object"""
 
     type: Literal["reorder"] = "reorder"
-    path: Optional[str] = None
+    path: str = "."
     order: list[str]
 
 
@@ -23,7 +23,7 @@ class ConvertAttributeToElement(BaseModel):
     """Model for converting attributes to elements"""
 
     type: Literal["attribute_to_element"] = "attribute_to_element"
-    path: Optional[str] = None
+    path: str = "."
     source: str
     target: str
 
@@ -32,7 +32,7 @@ class ConvertElementToAttribute(BaseModel):
     """Model for converting elements to attributes"""
 
     type: Literal["element_to_attribute"] = "element_to_attribute"
-    path: Optional[str] = None
+    path: str = "."
     source: str
     target: str
 
@@ -47,7 +47,7 @@ class ConditionalTransformation(BaseModel):
     """Model for applying transformations conditionally"""
 
     type: Literal["conditional"] = "conditional"
-    path: Optional[str] = None
+    path: str = "."
     condition: Condition
     true_transformation: "Transformation"  # Recursively reference the Transformation model
     false_transformation: Optional["Transformation"] = None
@@ -57,7 +57,7 @@ class MergeTransformation(BaseModel):
     """Model for merging elements"""
 
     type: Literal["merge"] = "merge"
-    path: Optional[str] = None
+    path: str = "."
     sources: list[str]
     target: str
 
@@ -66,7 +66,7 @@ class SplitTransformation(BaseModel):
     """Model for splitting elements"""
 
     type: Literal["split"] = "split"
-    path: Optional[str] = None
+    path: str = "."
     source: str
     targets: list[str]
 
@@ -75,7 +75,7 @@ class AddElementTransformation(BaseModel):
     """Model for adding new elements or attributes"""
 
     type: Literal["add"] = "add"
-    path: Optional[str] = None
+    path: str = "."
     target: str
     value: Any
 
@@ -84,7 +84,7 @@ class RemoveElementTransformation(BaseModel):
     """Model for removing elements or attributes"""
 
     type: Literal["remove"] = "remove"
-    path: Optional[str] = None
+    path: str = "."
     target: str
 
 
@@ -92,7 +92,7 @@ class TextModificationTransformation(BaseModel):
     """Model for modifying text content"""
 
     type: Literal["modify_text"] = "modify_text"
-    path: Optional[str] = None
+    path: str = "."
     target: str
     modification: str
 
@@ -101,7 +101,7 @@ class CopyStructureTransformation(BaseModel):
     """Model for copying the entire structure with modifications"""
 
     type: Literal["copy_structure"] = "copy_structure"
-    path: Optional[str] = None
+    path: str = "."
     modifications: list["Transformation"]
 
 
@@ -109,7 +109,7 @@ class GroupTransformation(BaseModel):
     """Model for grouping elements"""
 
     type: Literal["group"] = "group"
-    path: Optional[str] = None
+    path: str = "."
     source: str
     target: str
     group_by: str
