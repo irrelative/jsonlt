@@ -1,0 +1,23 @@
+{
+  "input": {
+    "person": {
+      "name": "John Doe"
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "add",
+        "path": ".person",
+        "target": "age",
+        "value": 30
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "name": "John Doe",
+      "age": 30
+    }
+  }
+}

@@ -148,7 +148,7 @@ class JSONLT(BaseModel):
 
     transformations: list[Transformation]
 
-    class Config:
+    class ConfigDict:
         title = "JSONLT"
 
 

@@ -1,0 +1,40 @@
+{
+  "input": {
+    "person": {
+      "name": "john doe",
+      "description": "  software engineer  ",
+      "email": "john.doe@example.com"
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "modify_text",
+        "path": ".person",
+        "target": "name",
+        "modification": "title"
+      },
+      {
+        "type": "modify_text",
+        "path": ".person",
+        "target": "description",
+        "modification": "strip"
+      },
+      {
+        "type": "modify_text",
+        "path": ".person",
+        "target": "email",
+        "modification": "replace",
+        "replace_old": "@example.com",
+        "replace_new": "@company.com"
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "name": "John Doe",
+      "description": "software engineer",
+      "email": "john.doe@company.com"
+    }
+  }
+}

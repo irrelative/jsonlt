@@ -1,0 +1,26 @@
+{
+  "input": {
+    "person": {
+      "fullName": {
+        "first": "John",
+        "last": "Doe"
+      }
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "split",
+        "path": ".person",
+        "source": "fullName",
+        "targets": ["firstName", "lastName"]
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "firstName": "John",
+      "lastName": "Doe"
+    }
+  }
+}

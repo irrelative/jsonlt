@@ -1,0 +1,21 @@
+{
+  "input": {
+    "a": 1,
+    "b": 2,
+    "c": 3
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "reorder",
+        "path": ".",
+        "order": ["c", "a", "b"]
+      }
+    ]
+  },
+  "output": {
+    "c": 3,
+    "a": 1,
+    "b": 2
+  }
+}

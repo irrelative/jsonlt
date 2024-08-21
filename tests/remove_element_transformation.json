@@ -1,0 +1,22 @@
+{
+  "input": {
+    "person": {
+      "name": "John Doe",
+      "age": 30
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "remove",
+        "path": ".person",
+        "target": "age"
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "name": "John Doe"
+    }
+  }
+}

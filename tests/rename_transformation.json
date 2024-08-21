@@ -1,0 +1,30 @@
+{
+  "input": {
+    "person": {
+      "firstName": "John",
+      "lastName": "Doe"
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "rename",
+        "path": ".person",
+        "source": "firstName",
+        "target": "givenName"
+      },
+      {
+        "type": "rename",
+        "path": ".person",
+        "source": "lastName",
+        "target": "familyName"
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "givenName": "John",
+      "familyName": "Doe"
+    }
+  }
+}

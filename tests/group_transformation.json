@@ -1,0 +1,31 @@
+{
+  "input": {
+    "employees": [
+      {"name": "John", "department": "IT"},
+      {"name": "Alice", "department": "HR"},
+      {"name": "Bob", "department": "IT"}
+    ]
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "group",
+        "path": ".",
+        "source": "employees",
+        "target": "grouped_employees",
+        "group_by": "department"
+      }
+    ]
+  },
+  "output": {
+    "grouped_employees": {
+      "IT": [
+        {"name": "John", "department": "IT"},
+        {"name": "Bob", "department": "IT"}
+      ],
+      "HR": [
+        {"name": "Alice", "department": "HR"}
+      ]
+    }
+  }
+}

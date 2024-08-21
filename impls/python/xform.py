@@ -241,6 +241,6 @@ def jsonlt_transform(json_data: Dict[str, Any], jsonlt_conf: Dict[str, Any]) -> 
     jsonlt = JSONLT(**jsonlt_conf)
     
     for transformation in jsonlt.transformations:
-        transformed_data = apply_transformation(transformed_data, transformation.dict())
+        transformed_data = apply_transformation(transformed_data, transformation.model_dump())
     
     return transformed_data

@@ -1,0 +1,27 @@
+{
+  "input": {
+    "name": "John Doe",
+    "age": 30
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "copy_structure",
+        "path": ".",
+        "modifications": [
+          {
+            "type": "add",
+            "path": ".",
+            "target": "occupation",
+            "value": "Engineer"
+          }
+        ]
+      }
+    ]
+  },
+  "output": {
+    "name": "John Doe",
+    "age": 30,
+    "occupation": "Engineer"
+  }
+}

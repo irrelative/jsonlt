@@ -1,0 +1,24 @@
+{
+  "input": {
+    "person": {
+      "age": 30
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "attribute_to_element",
+        "path": ".person",
+        "source": "age",
+        "target": "ageInfo"
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "ageInfo": {
+        "age": 30
+      }
+    }
+  }
+}
