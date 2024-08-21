@@ -1,5 +1,15 @@
 from pydantic import BaseModel
 from typing import Union, Optional, Any, Literal
+from enum import Enum
+
+
+class TextModification(str, Enum):
+    uppercase = "uppercase"
+    lowercase = "lowercase"
+    capitalize = "capitalize"
+    title = "title"
+    strip = "strip"
+    replace = "replace"
 
 
 class RenameTransformation(BaseModel):
@@ -94,7 +104,7 @@ class TextModificationTransformation(BaseModel):
     type: Literal["modify_text"] = "modify_text"
     path: str = "."
     target: str
-    modification: str
+    modification: TextModification
     replace_old: Optional[str] = None
     replace_new: Optional[str] = None
 
