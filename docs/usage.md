@@ -2,6 +2,118 @@
 
 This document provides an overview of each transformation type available in JSONLT, along with examples of how to use them.
 
+## End-to-End Example
+
+Here's a comprehensive example demonstrating multiple JSONLT transformations:
+
+Input JSON:
+```json
+{
+  "person": {
+    "firstName": "john",
+    "lastName": "doe",
+    "age": 30,
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "country": "USA"
+    },
+    "hobbies": ["reading", "cycling", "photography"]
+  }
+}
+```
+
+JSONLT Configuration:
+```json
+{
+  "transformations": [
+    {
+      "type": "rename",
+      "path": "person",
+      "source": "firstName",
+      "target": "givenName"
+    },
+    {
+      "type": "rename",
+      "path": "person",
+      "source": "lastName",
+      "target": "familyName"
+    },
+    {
+      "type": "merge",
+      "path": "person",
+      "sources": ["givenName", "familyName"],
+      "target": "fullName"
+    },
+    {
+      "type": "modify_text",
+      "path": "person.fullName",
+      "target": ".",
+      "modification": "title"
+    },
+    {
+      "type": "conditional",
+      "path": "person",
+      "condition": {
+        "operator": "gt",
+        "left": "age",
+        "right": 18
+      },
+      "true_transformation": {
+        "type": "add",
+        "path": ".",
+        "target": "isAdult",
+        "value": true
+      },
+      "false_transformation": {
+        "type": "add",
+        "path": ".",
+        "target": "isAdult",
+        "value": false
+      }
+    },
+    {
+      "type": "element_to_attribute",
+      "path": "person.address",
+      "source": "country",
+      "target": "countryCode"
+    },
+    {
+      "type": "reorder",
+      "path": "person",
+      "order": ["fullName", "age", "isAdult", "address", "hobbies"]
+    }
+  ]
+}
+```
+
+Output JSON:
+```json
+{
+  "person": {
+    "fullName": "John Doe",
+    "age": 30,
+    "isAdult": true,
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "countryCode": "USA"
+    },
+    "hobbies": ["reading", "cycling", "photography"]
+  }
+}
+```
+
+This example demonstrates the following transformations:
+1. Renaming "firstName" to "givenName" and "lastName" to "familyName"
+2. Merging "givenName" and "familyName" into "fullName"
+3. Modifying the text of "fullName" to title case
+4. Conditionally adding an "isAdult" field based on the age
+5. Converting the "country" element to a "countryCode" attribute in the address
+6. Reordering the fields in the "person" object
+
+Now, let's dive into each transformation type in detail.
+
 ## 1. Rename Transformation
 
 The rename transformation allows you to change the name of a key in your JSON data.
