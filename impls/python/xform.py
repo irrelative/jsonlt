@@ -275,11 +275,6 @@ if __name__ == "__main__":
                 "target": "fullName",
                 "value": ""
             },
-            #{
-            #    "type": "modify_text",
-            #    "target": "fullName",
-            #    "modification": "f'{data[\"person\"][\"givenName\"]} {data[\"person\"][\"familyName\"]}'"
-            #}
         ]
     }
 
