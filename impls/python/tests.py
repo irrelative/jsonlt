@@ -1,4 +1,3 @@
-import pytest
 from xform import jsonlt_transform
 
 def test_rename_transformation():
