@@ -326,4 +326,10 @@ Example:
 
 This will group the "employees" array into a "departments" object, with each department as a key containing an array of employees in that department.
 
-Remember that you can use the "path" field in each transformation to specify where in your JSON structure the transformation should be applied. The default "." applies the transformation at the root level.
+Remember that you can use the "path" field in each transformation to specify where in your JSON structure the transformation should be applied. The "path" value must always start with a dot (`.`). For example:
+
+- `.` applies the transformation at the root level (default)
+- `.person` applies the transformation to the "person" object at the root level
+- `.person.address` applies the transformation to the "address" object within the "person" object
+
+This ensures that all paths are relative to the root of the JSON document.
