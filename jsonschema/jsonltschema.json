@@ -1,0 +1,512 @@
+{
+  "$defs": {
+    "AddElementTransformation": {
+      "description": "Model for adding new elements or attributes",
+      "properties": {
+        "type": {
+          "const": "add",
+          "default": "add",
+          "enum": [
+            "add"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "target",
+        "value"
+      ],
+      "title": "AddElementTransformation",
+      "type": "object"
+    },
+    "ConditionalTransformation": {
+      "description": "Model for applying transformations conditionally",
+      "properties": {
+        "type": {
+          "const": "conditional",
+          "default": "conditional",
+          "enum": [
+            "conditional"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "condition": {
+          "title": "Condition",
+          "type": "string"
+        },
+        "true_transformation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RenameTransformation"
+            },
+            {
+              "$ref": "#/$defs/ReorderTransformation"
+            },
+            {
+              "$ref": "#/$defs/ConvertAttributeToElement"
+            },
+            {
+              "$ref": "#/$defs/ConvertElementToAttribute"
+            },
+            {
+              "$ref": "#/$defs/ConditionalTransformation"
+            },
+            {
+              "$ref": "#/$defs/MergeTransformation"
+            },
+            {
+              "$ref": "#/$defs/SplitTransformation"
+            },
+            {
+              "$ref": "#/$defs/AddElementTransformation"
+            },
+            {
+              "$ref": "#/$defs/RemoveElementTransformation"
+            },
+            {
+              "$ref": "#/$defs/TextModificationTransformation"
+            },
+            {
+              "$ref": "#/$defs/CopyStructureTransformation"
+            },
+            {
+              "$ref": "#/$defs/GroupTransformation"
+            }
+          ],
+          "title": "True Transformation"
+        },
+        "false_transformation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RenameTransformation"
+            },
+            {
+              "$ref": "#/$defs/ReorderTransformation"
+            },
+            {
+              "$ref": "#/$defs/ConvertAttributeToElement"
+            },
+            {
+              "$ref": "#/$defs/ConvertElementToAttribute"
+            },
+            {
+              "$ref": "#/$defs/ConditionalTransformation"
+            },
+            {
+              "$ref": "#/$defs/MergeTransformation"
+            },
+            {
+              "$ref": "#/$defs/SplitTransformation"
+            },
+            {
+              "$ref": "#/$defs/AddElementTransformation"
+            },
+            {
+              "$ref": "#/$defs/RemoveElementTransformation"
+            },
+            {
+              "$ref": "#/$defs/TextModificationTransformation"
+            },
+            {
+              "$ref": "#/$defs/CopyStructureTransformation"
+            },
+            {
+              "$ref": "#/$defs/GroupTransformation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "False Transformation"
+        }
+      },
+      "required": [
+        "condition",
+        "true_transformation"
+      ],
+      "title": "ConditionalTransformation",
+      "type": "object"
+    },
+    "ConvertAttributeToElement": {
+      "description": "Model for converting attributes to elements",
+      "properties": {
+        "type": {
+          "const": "attribute_to_element",
+          "default": "attribute_to_element",
+          "enum": [
+            "attribute_to_element"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "title": "ConvertAttributeToElement",
+      "type": "object"
+    },
+    "ConvertElementToAttribute": {
+      "description": "Model for converting elements to attributes",
+      "properties": {
+        "type": {
+          "const": "element_to_attribute",
+          "default": "element_to_attribute",
+          "enum": [
+            "element_to_attribute"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "title": "ConvertElementToAttribute",
+      "type": "object"
+    },
+    "CopyStructureTransformation": {
+      "description": "Model for copying the entire structure with modifications",
+      "properties": {
+        "type": {
+          "const": "copy_structure",
+          "default": "copy_structure",
+          "enum": [
+            "copy_structure"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "modifications": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RenameTransformation"
+              },
+              {
+                "$ref": "#/$defs/ReorderTransformation"
+              },
+              {
+                "$ref": "#/$defs/ConvertAttributeToElement"
+              },
+              {
+                "$ref": "#/$defs/ConvertElementToAttribute"
+              },
+              {
+                "$ref": "#/$defs/ConditionalTransformation"
+              },
+              {
+                "$ref": "#/$defs/MergeTransformation"
+              },
+              {
+                "$ref": "#/$defs/SplitTransformation"
+              },
+              {
+                "$ref": "#/$defs/AddElementTransformation"
+              },
+              {
+                "$ref": "#/$defs/RemoveElementTransformation"
+              },
+              {
+                "$ref": "#/$defs/TextModificationTransformation"
+              },
+              {
+                "$ref": "#/$defs/CopyStructureTransformation"
+              },
+              {
+                "$ref": "#/$defs/GroupTransformation"
+              }
+            ]
+          },
+          "title": "Modifications",
+          "type": "array"
+        }
+      },
+      "required": [
+        "modifications"
+      ],
+      "title": "CopyStructureTransformation",
+      "type": "object"
+    },
+    "GroupTransformation": {
+      "description": "Model for grouping elements",
+      "properties": {
+        "type": {
+          "const": "group",
+          "default": "group",
+          "enum": [
+            "group"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "group_by": {
+          "title": "Group By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "target",
+        "group_by"
+      ],
+      "title": "GroupTransformation",
+      "type": "object"
+    },
+    "MergeTransformation": {
+      "description": "Model for merging elements",
+      "properties": {
+        "type": {
+          "const": "merge",
+          "default": "merge",
+          "enum": [
+            "merge"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "sources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sources",
+        "target"
+      ],
+      "title": "MergeTransformation",
+      "type": "object"
+    },
+    "RemoveElementTransformation": {
+      "description": "Model for removing elements or attributes",
+      "properties": {
+        "type": {
+          "const": "remove",
+          "default": "remove",
+          "enum": [
+            "remove"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "title": "RemoveElementTransformation",
+      "type": "object"
+    },
+    "RenameTransformation": {
+      "description": "Model for renaming keys or attributes",
+      "properties": {
+        "type": {
+          "const": "rename",
+          "default": "rename",
+          "enum": [
+            "rename"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "title": "RenameTransformation",
+      "type": "object"
+    },
+    "ReorderTransformation": {
+      "description": "Model for reordering elements within an object",
+      "properties": {
+        "type": {
+          "const": "reorder",
+          "default": "reorder",
+          "enum": [
+            "reorder"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "order": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Order",
+          "type": "array"
+        }
+      },
+      "required": [
+        "order"
+      ],
+      "title": "ReorderTransformation",
+      "type": "object"
+    },
+    "SplitTransformation": {
+      "description": "Model for splitting elements",
+      "properties": {
+        "type": {
+          "const": "split",
+          "default": "split",
+          "enum": [
+            "split"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "targets": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Targets",
+          "type": "array"
+        }
+      },
+      "required": [
+        "source",
+        "targets"
+      ],
+      "title": "SplitTransformation",
+      "type": "object"
+    },
+    "TextModificationTransformation": {
+      "description": "Model for modifying text content",
+      "properties": {
+        "type": {
+          "const": "modify_text",
+          "default": "modify_text",
+          "enum": [
+            "modify_text"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "modification": {
+          "title": "Modification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target",
+        "modification"
+      ],
+      "title": "TextModificationTransformation",
+      "type": "object"
+    }
+  },
+  "description": "Model for the JSONLT transformation structure",
+  "properties": {
+    "transformations": {
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/RenameTransformation"
+          },
+          {
+            "$ref": "#/$defs/ReorderTransformation"
+          },
+          {
+            "$ref": "#/$defs/ConvertAttributeToElement"
+          },
+          {
+            "$ref": "#/$defs/ConvertElementToAttribute"
+          },
+          {
+            "$ref": "#/$defs/ConditionalTransformation"
+          },
+          {
+            "$ref": "#/$defs/MergeTransformation"
+          },
+          {
+            "$ref": "#/$defs/SplitTransformation"
+          },
+          {
+            "$ref": "#/$defs/AddElementTransformation"
+          },
+          {
+            "$ref": "#/$defs/RemoveElementTransformation"
+          },
+          {
+            "$ref": "#/$defs/TextModificationTransformation"
+          },
+          {
+            "$ref": "#/$defs/CopyStructureTransformation"
+          },
+          {
+            "$ref": "#/$defs/GroupTransformation"
+          }
+        ]
+      },
+      "title": "Transformations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "transformations"
+  ],
+  "title": "JSONLT",
+  "type": "object"
+}

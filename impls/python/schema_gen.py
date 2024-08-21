@@ -1,76 +1,103 @@
-from pydantic import BaseModel, Field
-from typing import Union, List, Optional, Any
+from pydantic import BaseModel
+from typing import Union, Optional, Any, Literal
+
 
 class RenameTransformation(BaseModel):
     """Model for renaming keys or attributes"""
-    type: str = Field("rename", const=True)
+
+    type: Literal["rename"] = "rename"
     source: str
     target: str
+
 
 class ReorderTransformation(BaseModel):
     """Model for reordering elements within an object"""
-    type: str = Field("reorder", const=True)
-    order: List[str]
+
+    type: Literal["reorder"] = "reorder"
+    order: list[str]
+
 
 class ConvertAttributeToElement(BaseModel):
     """Model for converting attributes to elements"""
-    type: str = Field("attribute_to_element", const=True)
+
+    type: Literal["attribute_to_element"] = "attribute_to_element"
     source: str
     target: str
+
 
 class ConvertElementToAttribute(BaseModel):
     """Model for converting elements to attributes"""
-    type: str = Field("element_to_attribute", const=True)
+
+    type: Literal["element_to_attribute"] = "element_to_attribute"
     source: str
     target: str
+
 
 class ConditionalTransformation(BaseModel):
     """Model for applying transformations conditionally"""
-    type: str = Field("conditional", const=True)
+
+    type: Literal["conditional"] = "conditional"
     condition: str
-    true_transformation: 'Transformation'  # Recursively reference the Transformation model
-    false_transformation: Optional['Transformation'] = None
+    true_transformation: (
+        "Transformation"  # Recursively reference the Transformation model
+    )
+    false_transformation: Optional["Transformation"] = None
+
 
 class MergeTransformation(BaseModel):
     """Model for merging elements"""
-    type: str = Field("merge", const=True)
-    sources: List[str]
+
+    type: Literal["merge"] = "merge"
+    sources: list[str]
     target: str
+
 
 class SplitTransformation(BaseModel):
     """Model for splitting elements"""
-    type: str = Field("split", const=True)
+
+    type: Literal["split"] = "split"
     source: str
-    targets: List[str]
+    targets: list[str]
+
 
 class AddElementTransformation(BaseModel):
     """Model for adding new elements or attributes"""
-    type: str = Field("add", const=True)
+
+    type: Literal["add"] = "add"
     target: str
     value: Any
 
+
 class RemoveElementTransformation(BaseModel):
     """Model for removing elements or attributes"""
-    type: str = Field("remove", const=True)
+
+    type: Literal["remove"] = "remove"
     target: str
+
 
 class TextModificationTransformation(BaseModel):
     """Model for modifying text content"""
-    type: str = Field("modify_text", const=True)
+
+    type: Literal["modify_text"] = "modify_text"
     target: str
     modification: str
 
+
 class CopyStructureTransformation(BaseModel):
     """Model for copying the entire structure with modifications"""
-    type: str = Field("copy_structure", const=True)
-    modifications: List['Transformation']
+
+    type: Literal["copy_structure"] = "copy_structure"
+    modifications: list["Transformation"]
+
 
 class GroupTransformation(BaseModel):
     """Model for grouping elements"""
-    type: str = Field("group", const=True)
+
+    type: Literal["group"] = "group"
     source: str
     target: str
     group_by: str
+
 
 Transformation = Union[
     RenameTransformation,
@@ -87,14 +114,19 @@ Transformation = Union[
     GroupTransformation,
 ]
 
+
 class JSONLT(BaseModel):
     """Model for the JSONLT transformation structure"""
-    transformations: List[Transformation]
+
+    transformations: list[Transformation]
 
     class Config:
         title = "JSONLT"
 
 
 if __name__ == "__main__":
-    from pydantic.schema import schema
-    json_schema = schema([JSONLT])
+    import json
+    from pydantic.json_schema import model_json_schema
+
+    json_schema = model_json_schema(JSONLT)
+    print(json.dumps(json_schema, indent=2))
