@@ -31,6 +31,13 @@ def element_to_attribute_transformation(data: Dict[str, Any], source: str, targe
 
 
 def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
+    """
+    Evaluate a condition against the given data.
+    
+    This function uses a dictionary of operator functions to evaluate various
+    conditions (equality, inequality, greater than, less than, etc.) on the data.
+    It also handles nested conditions and resolves values from the data structure.
+    """
     ops = {
         "eq": operator.eq,
         "ne": operator.ne,
@@ -44,10 +51,15 @@ def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
     }
 
     def resolve_value(value: Union[str, Condition], data: Dict[str, Any]) -> Any:
+        """
+        Resolve a value from the data structure or evaluate a nested condition.
+        
+        If the value is a string, it's treated as a path to a value in the data.
+        If it's a Condition, it's recursively evaluated.
+        """
         if isinstance(value, Condition):
             return evaluate_condition(value, data)
         elif isinstance(value, str):
-            # Assume it's a path to a value in the data
             parts = value.split('.')
             current = data
             for part in parts:
@@ -61,12 +73,6 @@ def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
             return current
         else:
             return value
-
-    def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
-        # ... (keep the existing code)
-        left = resolve_value(condition.left, data)
-        right = resolve_value(condition.right, data) if condition.right is not None else None
-        # ... (keep the rest of the existing code)
 
     left = resolve_value(condition.left, data)
     right = resolve_value(condition.right, data) if condition.right is not None else None
@@ -85,6 +91,13 @@ def conditional_transformation(data: Dict[str, Any], condition: Condition, true_
 
 
 def merge_transformation(data: Dict[str, Any], sources: List[str], target: str) -> Dict[str, Any]:
+    """
+    Merge multiple source fields into a single target field.
+    
+    This function recursively traverses the data structure, merging specified
+    source fields into a single target field. It handles nested dictionaries
+    and preserves the structure of non-source fields.
+    """
     def merge_recursive(d: Dict[str, Any]) -> Dict[str, Any]:
         merged = {}
         new_d = {}
@@ -106,6 +119,13 @@ def merge_transformation(data: Dict[str, Any], sources: List[str], target: str) 
 
 
 def split_transformation(data: Dict[str, Any], source: str, targets: List[str]) -> Dict[str, Any]:
+    """
+    Split a source field into multiple target fields.
+    
+    This function recursively traverses the data structure, splitting the specified
+    source field (if it's a dictionary) into multiple target fields. It preserves
+    the structure of other fields and handles nested dictionaries.
+    """
     def split_recursive(d: Dict[str, Any]) -> Dict[str, Any]:
         if source in d and isinstance(d[source], dict):
             source_data = d.pop(source)
@@ -131,6 +151,13 @@ def remove_element_transformation(data: Dict[str, Any], target: str) -> Dict[str
 
 
 def modify_text_transformation(data: Dict[str, Any], target: str, modification: str, replace_old: Optional[str] = None, replace_new: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Modify the text of a target field based on the specified modification.
+    
+    This function applies various text modifications (uppercase, lowercase,
+    capitalize, title, strip, replace) to the target field if it exists and is a string.
+    For the 'replace' modification, it requires both 'replace_old' and 'replace_new' parameters.
+    """
     if target in data and isinstance(data[target], str):
         if modification == "uppercase":
             data[target] = data[target].upper()
@@ -169,6 +196,13 @@ def group_transformation(data: Dict[str, Any], source: str, target: str, group_b
     return data
 
 def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -> Dict[str, Any]:
+    """
+    Apply a transformation function to a specific path in the data structure.
+    
+    This function navigates through the data structure based on the given path
+    and applies the transformation function at the specified location. It handles
+    root-level transformations, list transformations, and nested dictionary paths.
+    """
     if path == ".":
         return transformation_func(data)
     
@@ -199,6 +233,13 @@ def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -
 
 
 def apply_transformation(data: Dict[str, Any], transformation: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Apply a specific transformation to the data based on the transformation type.
+    
+    This function acts as a dispatcher, calling the appropriate transformation
+    function based on the 'type' specified in the transformation dictionary.
+    It applies the transformation to the specified path in the data structure.
+    """
     transformation_type = transformation['type']
     path = transformation.get('path', '.')
 
