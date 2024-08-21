@@ -33,14 +33,18 @@ class ConvertElementToAttribute(BaseModel):
     target: str
 
 
+class Condition(BaseModel):
+    """Model for condition representation"""
+    operator: Literal["eq", "ne", "gt", "lt", "ge", "le", "and", "or", "not"]
+    left: Union[str, "Condition"]
+    right: Optional[Union[str, "Condition"]] = None
+
 class ConditionalTransformation(BaseModel):
     """Model for applying transformations conditionally"""
 
     type: Literal["conditional"] = "conditional"
-    condition: str
-    true_transformation: (
-        "Transformation"  # Recursively reference the Transformation model
-    )
+    condition: Condition
+    true_transformation: "Transformation"  # Recursively reference the Transformation model
     false_transformation: Optional["Transformation"] = None
 
 
