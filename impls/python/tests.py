@@ -5,8 +5,8 @@ def test_rename_transformation():
     data = {"person": {"firstName": "John", "lastName": "Doe"}}
     jsonlt_conf = {
         "transformations": [
-            {"type": "rename", "source": "firstName", "target": "givenName"},
-            {"type": "rename", "source": "lastName", "target": "familyName"}
+            {"type": "rename", "path": ".person", "source": "firstName", "target": "givenName"},
+            {"type": "rename", "path": ".person", "source": "lastName", "target": "familyName"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -21,7 +21,7 @@ def test_reorder_transformation():
     data = {"a": 1, "b": 2, "c": 3}
     jsonlt_conf = {
         "transformations": [
-            {"type": "reorder", "order": ["c", "a", "b"]}
+            {"type": "reorder", "path": ".", "order": ["c", "a", "b"]}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -31,7 +31,7 @@ def test_attribute_to_element_transformation():
     data = {"person": {"age": 30}}
     jsonlt_conf = {
         "transformations": [
-            {"type": "attribute_to_element", "source": "age", "target": "ageInfo"}
+            {"type": "attribute_to_element", "path": ".person", "source": "age", "target": "ageInfo"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -43,7 +43,7 @@ def test_element_to_attribute_transformation():
     data = {"person": {"name": {"first": "John", "last": "Doe"}}}
     jsonlt_conf = {
         "transformations": [
-            {"type": "element_to_attribute", "source": "name", "target": "fullName"}
+            {"type": "element_to_attribute", "path": ".person", "source": "name", "target": "fullName"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -56,9 +56,10 @@ def test_conditional_transformation():
         "transformations": [
             {
                 "type": "conditional",
-                "condition": {"operator": "gt", "left": "person.age", "right": "18"},
-                "true_transformation": {"type": "add", "target": "person.status", "value": "adult"},
-                "false_transformation": {"type": "add", "target": "person.status", "value": "minor"}
+                "path": ".person",
+                "condition": {"operator": "gt", "left": "age", "right": "18"},
+                "true_transformation": {"type": "add", "path": ".", "target": "status", "value": "adult"},
+                "false_transformation": {"type": "add", "path": ".", "target": "status", "value": "minor"}
             }
         ]
     }
@@ -69,7 +70,7 @@ def test_merge_transformation():
     data = {"person": {"name": {"first": "John", "last": "Doe"}, "age": 30}}
     jsonlt_conf = {
         "transformations": [
-            {"type": "merge", "sources": ["name", "age"], "target": "info"}
+            {"type": "merge", "path": ".person", "sources": ["name", "age"], "target": "info"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -82,7 +83,7 @@ def test_split_transformation():
     data = {"person": {"fullName": {"first": "John", "last": "Doe"}}}
     jsonlt_conf = {
         "transformations": [
-            {"type": "split", "source": "fullName", "targets": ["firstName", "lastName"]}
+            {"type": "split", "path": ".person", "source": "fullName", "targets": ["firstName", "lastName"]}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -95,7 +96,7 @@ def test_add_element_transformation():
     data = {"person": {"name": "John Doe"}}
     jsonlt_conf = {
         "transformations": [
-            {"type": "add", "target": "person.age", "value": 30}
+            {"type": "add", "path": ".person", "target": "age", "value": 30}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -106,7 +107,7 @@ def test_remove_element_transformation():
     data = {"person": {"name": "John Doe", "age": 30}}
     jsonlt_conf = {
         "transformations": [
-            {"type": "remove", "target": "person.age"}
+            {"type": "remove", "path": ".person", "target": "age"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -122,9 +123,9 @@ def test_modify_text_transformation():
     }
     jsonlt_conf = {
         "transformations": [
-            {"type": "modify_text", "target": "person.name", "modification": "title"},
-            {"type": "modify_text", "target": "person.description", "modification": "strip"},
-            {"type": "modify_text", "target": "person.email", "modification": "replace", "replace_old": "@example.com", "replace_new": "@company.com"}
+            {"type": "modify_text", "path": ".person", "target": "name", "modification": "title"},
+            {"type": "modify_text", "path": ".person", "target": "description", "modification": "strip"},
+            {"type": "modify_text", "path": ".person", "target": "email", "modification": "replace", "replace_old": "@example.com", "replace_new": "@company.com"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
@@ -138,8 +139,9 @@ def test_copy_structure_transformation():
         "transformations": [
             {
                 "type": "copy_structure",
+                "path": ".",
                 "modifications": [
-                    {"type": "add", "target": "occupation", "value": "Engineer"}
+                    {"type": "add", "path": ".", "target": "occupation", "value": "Engineer"}
                 ]
             }
         ]
@@ -158,7 +160,7 @@ def test_group_transformation():
     }
     jsonlt_conf = {
         "transformations": [
-            {"type": "group", "source": "employees", "target": "grouped_employees", "group_by": "department"}
+            {"type": "group", "path": ".", "source": "employees", "target": "grouped_employees", "group_by": "department"}
         ]
     }
     result = jsonlt_transform(data, jsonlt_conf)
