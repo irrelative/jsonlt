@@ -1,0 +1,48 @@
+{
+  "input": {
+    "person": {
+      "age": 16,
+      "student": true
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "conditional",
+        "path": ".person",
+        "condition": {
+          "operator": "or",
+          "left": {
+            "operator": "ge",
+            "left": "age",
+            "right": 18
+          },
+          "right": {
+            "operator": "eq",
+            "left": "student",
+            "right": true
+          }
+        },
+        "true_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "adult_or_student"
+        },
+        "false_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "minor_non_student"
+        }
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "age": 16,
+      "student": true,
+      "status": "adult_or_student"
+    }
+  }
+}

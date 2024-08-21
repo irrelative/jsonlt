@@ -1,0 +1,38 @@
+{
+  "input": {
+    "person": {
+      "age": 18
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "conditional",
+        "path": ".person",
+        "condition": {
+          "operator": "eq",
+          "left": "age",
+          "right": 18
+        },
+        "true_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "just_adult"
+        },
+        "false_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "not_18"
+        }
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "age": 18,
+      "status": "just_adult"
+    }
+  }
+}

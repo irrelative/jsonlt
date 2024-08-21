@@ -1,0 +1,48 @@
+{
+  "input": {
+    "person": {
+      "age": 25,
+      "employed": true
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "conditional",
+        "path": ".person",
+        "condition": {
+          "operator": "and",
+          "left": {
+            "operator": "ge",
+            "left": "age",
+            "right": 18
+          },
+          "right": {
+            "operator": "eq",
+            "left": "employed",
+            "right": true
+          }
+        },
+        "true_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "adult_and_employed"
+        },
+        "false_transformation": {
+          "type": "add",
+          "path": ".",
+          "target": "status",
+          "value": "not_adult_or_unemployed"
+        }
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "age": 25,
+      "employed": true,
+      "status": "adult_and_employed"
+    }
+  }
+}
