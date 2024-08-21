@@ -95,6 +95,8 @@ class TextModificationTransformation(BaseModel):
     path: str = "."
     target: str
     modification: str
+    replace_old: Optional[str] = None
+    replace_new: Optional[str] = None
 
 
 class CopyStructureTransformation(BaseModel):
