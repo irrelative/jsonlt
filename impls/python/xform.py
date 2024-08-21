@@ -1,7 +1,7 @@
 # Transform json to json using jsonlt object
 
 from schema_gen import JSONLT, Condition
-from typing import Any, Dict, List, Union, Optional
+from typing import Any, Dict, List, Union, Optional, Callable
 import copy
 import operator
 from functools import reduce
