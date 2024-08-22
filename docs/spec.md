@@ -456,3 +456,53 @@ Output JSON:
 ```
 
 In this example, the "full_name" object is split into separate "first_name" and "last_name" fields within the "user" object. The original "full_name" field is removed after the split.
+
+### 10. Add Element Transformation
+
+The Add Element transformation creates a new field in the JSON structure with a specified value.
+
+#### Inputs
+
+- `type` (required): String, must be "add"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `target` (required): String, the name of the new field to be added
+- `value` (required): Any, the value to be assigned to the new field
+
+#### Output
+
+The transformation modifies the input JSON by adding a new field with the specified name and value at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "age": 30
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "add",
+  "path": ".user",
+  "target": "is_active",
+  "value": true
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "age": 30,
+    "is_active": true
+  }
+}
+```
+
+In this example, a new "is_active" field with the value `true` is added to the "user" object.
