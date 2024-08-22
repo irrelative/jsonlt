@@ -1,0 +1,88 @@
+{
+  "input": {
+  "person": {
+    "firstName": "john",
+    "lastName": "doe",
+    "age": 30,
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "country": "USA"
+    },
+    "hobbies": ["reading", "cycling", "photography"]
+  }
+},
+  "jsonlt": {
+      "transformations": [
+        {
+          "type": "rename",
+          "path": ".person",
+          "source": "firstName",
+          "target": "givenName"
+        },
+        {
+          "type": "rename",
+          "path": ".person",
+          "source": "lastName",
+          "target": "familyName"
+        },
+        {
+          "type": "merge",
+          "path": ".person",
+          "sources": ["givenName", "familyName"],
+          "target": "fullName"
+        },
+        {
+          "type": "modify_text",
+          "path": ".person.fullName",
+          "target": ".",
+          "modification": "title"
+        },
+        {
+          "type": "conditional",
+          "path": ".person",
+          "condition": {
+            "operator": "gt",
+            "left": "age",
+            "right": 18
+          },
+          "true_transformation": {
+            "type": "add",
+            "path": ".",
+            "target": "isAdult",
+            "value": true
+          },
+          "false_transformation": {
+            "type": "add",
+            "path": ".",
+            "target": "isAdult",
+            "value": false
+          }
+        },
+        {
+          "type": "element_to_attribute",
+          "path": ".person.address",
+          "source": "country",
+          "target": "countryCode"
+        },
+        {
+          "type": "reorder",
+          "path": ".person",
+          "order": ["fullName", "age", "isAdult", "address", "hobbies"]
+        }
+      ]
+  },
+  "output": {
+      "person": {
+        "fullName": "John Doe",
+        "age": 30,
+        "isAdult": true,
+        "address": {
+          "street": "123 Main St",
+          "city": "Anytown",
+          "countryCode": "USA"
+        },
+        "hobbies": ["reading", "cycling", "photography"]
+      }
+    }
+}

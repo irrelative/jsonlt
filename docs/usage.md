@@ -29,31 +29,31 @@ JSONLT Configuration:
   "transformations": [
     {
       "type": "rename",
-      "path": "person",
+      "path": ".person",
       "source": "firstName",
       "target": "givenName"
     },
     {
       "type": "rename",
-      "path": "person",
+      "path": ".person",
       "source": "lastName",
       "target": "familyName"
     },
     {
       "type": "merge",
-      "path": "person",
+      "path": ".person",
       "sources": ["givenName", "familyName"],
       "target": "fullName"
     },
     {
       "type": "modify_text",
-      "path": "person.fullName",
+      "path": ".person.fullName",
       "target": ".",
       "modification": "title"
     },
     {
       "type": "conditional",
-      "path": "person",
+      "path": ".person",
       "condition": {
         "operator": "gt",
         "left": "age",
@@ -74,13 +74,13 @@ JSONLT Configuration:
     },
     {
       "type": "element_to_attribute",
-      "path": "person.address",
+      "path": ".person.address",
       "source": "country",
       "target": "countryCode"
     },
     {
       "type": "reorder",
-      "path": "person",
+      "path": ".person",
       "order": ["fullName", "age", "isAdult", "address", "hobbies"]
     }
   ]

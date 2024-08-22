@@ -1,4 +1,9 @@
+# TODO
+* Merge step is ambiguous
+* Fix docs_example
+
 # JSON Language Transformation
+
 This document outlines the functionalities required for a JSON-to-JSON transformation language. The goal is to provide a comprehensive set of transformation capabilities that can be applied to convert one JSON format to another.
 
 ## Documentation
