@@ -554,3 +554,88 @@ Output JSON:
 ```
 
 In this example, the "temporary_field" is removed from the "user" object.
+
+### 12. Text Modification Transformation
+
+The Text Modification transformation applies various text operations to a specified field in the JSON structure.
+
+#### Inputs
+
+- `type` (required): String, must be "modify_text"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `target` (required): String, the name of the field to be modified
+- `modification` (required): String, one of "uppercase", "lowercase", "capitalize", "title", "strip", or "replace"
+- `replace_old` (optional): String, required only when `modification` is "replace", specifies the substring to be replaced
+- `replace_new` (optional): String, required only when `modification` is "replace", specifies the replacement substring
+
+#### Output
+
+The transformation modifies the input JSON by applying the specified text modification to the target field at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "name": "john doe",
+    "email": "JOHN.DOE@EXAMPLE.COM",
+    "bio": "  Web developer  "
+  }
+}
+```
+
+Transformations:
+```json
+[
+  {
+    "type": "modify_text",
+    "path": ".user",
+    "target": "name",
+    "modification": "title"
+  },
+  {
+    "type": "modify_text",
+    "path": ".user",
+    "target": "email",
+    "modification": "lowercase"
+  },
+  {
+    "type": "modify_text",
+    "path": ".user",
+    "target": "bio",
+    "modification": "strip"
+  }
+]
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "bio": "Web developer"
+  }
+}
+```
+
+In this example, three text modifications are applied:
+1. The "name" field is converted to title case.
+2. The "email" field is converted to lowercase.
+3. The "bio" field has leading and trailing whitespace removed.
+
+For the "replace" modification, you would use it like this:
+
+```json
+{
+  "type": "modify_text",
+  "path": ".user",
+  "target": "name",
+  "modification": "replace",
+  "replace_old": "john",
+  "replace_new": "Jane"
+}
+```
+
+This would replace "john" with "Jane" in the "name" field.
