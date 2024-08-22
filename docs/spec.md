@@ -506,3 +506,51 @@ Output JSON:
 ```
 
 In this example, a new "is_active" field with the value `true` is added to the "user" object.
+
+### 11. Remove Element Transformation
+
+The Remove Element transformation deletes a specified field from the JSON structure.
+
+#### Inputs
+
+- `type` (required): String, must be "remove"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `target` (required): String, the name of the field to be removed
+
+#### Output
+
+The transformation modifies the input JSON by removing the specified field at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "age": 30,
+    "temporary_field": "to be removed"
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "remove",
+  "path": ".user",
+  "target": "temporary_field"
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "age": 30
+  }
+}
+```
+
+In this example, the "temporary_field" is removed from the "user" object.
