@@ -49,8 +49,24 @@ jobs:
       run: |
         cd impls/js/jsonlt && npm run build && cd ../../..
         mkdir demo_build
-        cp demo/index.html demo_build/
-        cp impls/js/jsonlt/dist/jsonlt.js demo_build/
+        echo "Current directory structure:"
+        ls -R
+        if [ -f demo/index.html ]; then
+          cp demo/index.html demo_build/
+        elif [ -f impls/js/jsonlt/demo/index.html ]; then
+          cp impls/js/jsonlt/demo/index.html demo_build/
+        else
+          echo "Error: index.html not found in expected locations"
+          exit 1
+        fi
+        if [ -f impls/js/jsonlt/dist/jsonlt.js ]; then
+          cp impls/js/jsonlt/dist/jsonlt.js demo_build/
+        else
+          echo "Error: jsonlt.js not found in expected location"
+          exit 1
+        fi
+        echo "Contents of demo_build:"
+        ls -l demo_build
     - name: Upload demo artifact
       uses: actions/upload-pages-artifact@v1
       with:
