@@ -128,3 +128,56 @@ Output JSON:
 ```
 
 In this example, the "first_name" field is renamed to "given_name" within the "user.personal_info" object.
+
+### 4. Reorder Transformation
+
+The Reorder transformation changes the order of fields in a JSON object.
+
+#### Inputs
+
+- `type` (required): String, must be "reorder"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `order` (required): Array of strings, specifies the new order of fields
+
+#### Output
+
+The transformation modifies the input JSON by reordering the fields according to the specified `order` at the location specified by `path`. Fields not mentioned in the `order` array will be placed at the end in their original order.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "personal_info": {
+      "last_name": "Doe",
+      "first_name": "John",
+      "age": 30
+    }
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "reorder",
+  "path": ".user.personal_info",
+  "order": ["first_name", "last_name", "age"]
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "personal_info": {
+      "first_name": "John",
+      "last_name": "Doe",
+      "age": 30
+    }
+  }
+}
+```
+
+In this example, the fields within the "user.personal_info" object are reordered according to the specified order.
