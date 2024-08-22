@@ -1,6 +1,6 @@
-# This workflow will install Python and Node.js dependencies, run tests and lint for both Python and JavaScript implementations
+# This workflow will install Python and Node.js dependencies, run tests, lint, build the demo, and deploy it to GitHub Pages
 
-name: JSONLT CI
+name: JSONLT CI and Demo Deployment
 
 on:
   push:
@@ -10,12 +10,12 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
@@ -37,9 +37,7 @@ jobs:
         cd impls/js/jsonlt && npm install && cd ../../..
     - name: Lint with flake8
       run: |
-        # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test Python with pytest
       run: |
@@ -47,3 +45,24 @@ jobs:
     - name: Test JavaScript with Jest
       run: |
         cd impls/js/jsonlt && npm test && cd ../../..
+    - name: Build demo
+      run: |
+        cd impls/js/jsonlt && npm run build && cd ../../..
+        mkdir demo_build
+        cp demo/index.html demo_build/
+        cp impls/js/jsonlt/dist/jsonlt.js demo_build/
+    - name: Upload demo artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: 'demo_build'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
