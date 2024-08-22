@@ -100,6 +100,35 @@ function evaluateCondition(condition, data) {
   } else {
     return ops[condition.operator](left, right);
   }
+
+  function resolveValue(value, data) {
+    if (value instanceof Condition) {
+      return evaluateCondition(value, data);
+    } else if (typeof value === 'string') {
+      const parts = value.split('.');
+      let current = data;
+      for (const part of parts) {
+        if (typeof current === 'object' && part in current) {
+          current = current[part];
+        } else {
+          const num = parseInt(value);
+          return isNaN(num) ? value : num;
+        }
+      }
+      return current;
+    } else {
+      return value;
+    }
+  }
+
+  const left = resolveValue(condition.left, data);
+  const right = condition.right !== undefined ? resolveValue(condition.right, data) : undefined;
+
+  if (condition.operator === 'not') {
+    return ops[condition.operator](left);
+  } else {
+    return ops[condition.operator](left, right);
+  }
 }
 
 function conditionalTransformation(data, condition, trueTransformation, falseTransformation = null) {
