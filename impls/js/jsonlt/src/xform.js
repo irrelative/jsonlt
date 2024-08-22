@@ -321,5 +321,6 @@ function jsonltTransform(jsonData, jsonltConf) {
 }
 
 module.exports = {
-  jsonltTransform
+  jsonltTransform,
+  evaluateCondition
 };

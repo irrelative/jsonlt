@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { transform } = require('../src/index');
+const { evaluateCondition } = require('../src/xform');
 
 function findTestfilesFolder() {
   let currentDir = __dirname;
@@ -35,5 +36,30 @@ describe('JSON file tests', () => {
 
   test('At least one test file was found', () => {
     expect(jsonFiles.length).toBeGreaterThan(0);
+  });
+});
+
+describe('evaluateCondition', () => {
+  test('not operator works correctly', () => {
+    const data = { age: 25 };
+    const condition = {
+      operator: 'not',
+      left: {
+        operator: 'lt',
+        left: 'age',
+        right: 18
+      }
+    };
+    expect(evaluateCondition(condition, data)).toBe(true);
+
+    const falseCondition = {
+      operator: 'not',
+      left: {
+        operator: 'gt',
+        left: 'age',
+        right: 18
+      }
+    };
+    expect(evaluateCondition(falseCondition, data)).toBe(false);
   });
 });
