@@ -21,7 +21,7 @@
         textarea {
             width: 100%;
             height: 200px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -47,24 +47,63 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>JSONLT Demo</h1>
     <h2>Input JSON</h2>
     <textarea id="input">{"name": "John", "age": 30}</textarea>
+    <div id="input-error" class="error"></div>
     <h2>JSONLT Configuration</h2>
     <textarea id="config">{"transformations": [{"type": "add", "path": ".", "target": "greeting", "value": "Hello"}]}</textarea>
+    <div id="config-error" class="error"></div>
     <button onclick="transform()">Transform</button>
     <h2>Output</h2>
     <pre id="output"></pre>
+    <div id="output-error" class="error"></div>
 
     <script>
         function transform() {
-            const input = JSON.parse(document.getElementById('input').value);
-            const config = JSON.parse(document.getElementById('config').value);
-            const output = JSONLT.transform(input, config);
-            document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+            const inputEl = document.getElementById('input');
+            const configEl = document.getElementById('config');
+            const outputEl = document.getElementById('output');
+            const inputErrorEl = document.getElementById('input-error');
+            const configErrorEl = document.getElementById('config-error');
+            const outputErrorEl = document.getElementById('output-error');
+
+            // Clear previous errors and output
+            inputErrorEl.textContent = '';
+            configErrorEl.textContent = '';
+            outputErrorEl.textContent = '';
+            outputEl.textContent = '';
+
+            let input, config;
+
+            try {
+                input = JSON.parse(inputEl.value);
+            } catch (error) {
+                inputErrorEl.textContent = `Input JSON Error: ${error.message}`;
+                return;
+            }
+
+            try {
+                config = JSON.parse(configEl.value);
+            } catch (error) {
+                configErrorEl.textContent = `Config JSON Error: ${error.message}`;
+                return;
+            }
+
+            try {
+                const output = JSONLT.transform(input, config);
+                outputEl.textContent = JSON.stringify(output, null, 2);
+            } catch (error) {
+                outputErrorEl.textContent = `Transform Error: ${error.message}`;
+            }
         }
     </script>
 </body>
