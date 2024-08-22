@@ -1,0 +1,13 @@
+{
+  "name": "jsonlt",
+  "version": "1.0.0",
+  "description": "JSON Transformation Library",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
