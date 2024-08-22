@@ -403,3 +403,56 @@ Output JSON:
 ```
 
 In this example, the "first_name" and "last_name" fields are merged into a new "full_name" object within the "user" object. The original source fields are removed after the merge.
+
+### 9. Split Transformation
+
+The Split transformation divides a source field into multiple target fields.
+
+#### Inputs
+
+- `type` (required): String, must be "split"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `source` (required): String, the name of the field to be split
+- `targets` (required): Array of strings, specifies the names of the new fields that will contain the split data
+
+#### Output
+
+The transformation modifies the input JSON by splitting the specified source field into multiple target fields at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "full_name": {
+      "first": "John",
+      "last": "Doe"
+    },
+    "age": 30
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "split",
+  "path": ".user",
+  "source": "full_name",
+  "targets": ["first_name", "last_name"]
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "age": 30
+  }
+}
+```
+
+In this example, the "full_name" object is split into separate "first_name" and "last_name" fields within the "user" object. The original "full_name" field is removed after the split.
