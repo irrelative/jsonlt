@@ -711,3 +711,62 @@ Output JSON:
 ```
 
 In this example, the entire "user" structure is copied. In the copy, the "name" field is renamed to "full_name", and the "street" field is removed from the "address" object. The original "user" structure remains unchanged, while the modified copy is added to the same level.
+
+### 14. Group Transformation
+
+The Group transformation organizes elements from an array into groups based on a specified field.
+
+#### Inputs
+
+- `type` (required): String, must be "group"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `source` (required): String, the name of the array field to be grouped
+- `target` (required): String, the name of the new field that will contain the grouped data
+- `group_by` (required): String, the name of the field to use for grouping
+
+#### Output
+
+The transformation modifies the input JSON by grouping the elements of the specified source array based on the `group_by` field. The grouped data is stored in a new field specified by `target`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "products": [
+    {"id": 1, "category": "electronics", "name": "Laptop"},
+    {"id": 2, "category": "books", "name": "Novel"},
+    {"id": 3, "category": "electronics", "name": "Smartphone"},
+    {"id": 4, "category": "books", "name": "Textbook"}
+  ]
+}
+```
+
+Transformation:
+```json
+{
+  "type": "group",
+  "path": ".",
+  "source": "products",
+  "target": "grouped_products",
+  "group_by": "category"
+}
+```
+
+Output JSON:
+```json
+{
+  "grouped_products": {
+    "electronics": [
+      {"id": 1, "category": "electronics", "name": "Laptop"},
+      {"id": 3, "category": "electronics", "name": "Smartphone"}
+    ],
+    "books": [
+      {"id": 2, "category": "books", "name": "Novel"},
+      {"id": 4, "category": "books", "name": "Textbook"}
+    ]
+  }
+}
+```
+
+In this example, the "products" array is grouped by the "category" field. The resulting grouped structure is stored in a new "grouped_products" field, where each key represents a category, and the corresponding value is an array of products in that category.
