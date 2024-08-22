@@ -129,12 +129,11 @@ class GroupTransformation(BaseModel):
 
 
 class ConcatTransformation(BaseModel):
-    """Model for concatenating two fields"""
+    """Model for concatenating multiple fields"""
 
     type: Literal["concat"] = "concat"
     path: str = "."
-    source1: str
-    source2: str
+    sources: list[str]
     target: str
     delimiter: Optional[str] = None
 

@@ -195,14 +195,16 @@ def group_transformation(data: Dict[str, Any], source: str, target: str, group_b
         del data[source]
     return data
 
-def concat_transformation(data: Dict[str, Any], source1: str, source2: str, target: str, delimiter: Optional[str] = None) -> Dict[str, Any]:
-    if source1 in data and source2 in data:
-        value1 = str(data[source1])
-        value2 = str(data[source2])
+def concat_transformation(data: Dict[str, Any], sources: List[str], target: str, delimiter: Optional[str] = None) -> Dict[str, Any]:
+    values = []
+    for source in sources:
+        if source in data:
+            values.append(str(data[source]))
+    if values:
         if delimiter is not None:
-            data[target] = delimiter.join([value1, value2])
+            data[target] = delimiter.join(values)
         else:
-            data[target] = value1 + value2
+            data[target] = ''.join(values)
     return data
 
 def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -> Dict[str, Any]:
@@ -285,7 +287,7 @@ def apply_transformation(data: Dict[str, Any], transformation: Dict[str, Any]) -
     elif transformation_type == 'group':
         return apply_path(data, path, lambda x: group_transformation(x, transformation['source'], transformation['target'], transformation['group_by']))
     elif transformation_type == 'concat':
-        return apply_path(data, path, lambda x: concat_transformation(x, transformation['source1'], transformation['source2'], transformation['target'], transformation.get('delimiter')))
+        return apply_path(data, path, lambda x: concat_transformation(x, transformation['sources'], transformation['target'], transformation.get('delimiter')))
     return data
 
 
