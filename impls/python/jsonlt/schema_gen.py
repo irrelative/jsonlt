@@ -128,6 +128,17 @@ class GroupTransformation(BaseModel):
     group_by: str
 
 
+class ConcatTransformation(BaseModel):
+    """Model for concatenating two fields"""
+
+    type: Literal["concat"] = "concat"
+    path: str = "."
+    source1: str
+    source2: str
+    target: str
+    delimiter: Optional[str] = None
+
+
 Transformation = Union[
     RenameTransformation,
     ReorderTransformation,
@@ -141,6 +152,7 @@ Transformation = Union[
     TextModificationTransformation,
     CopyStructureTransformation,
     GroupTransformation,
+    ConcatTransformation,
 ]
 
 
