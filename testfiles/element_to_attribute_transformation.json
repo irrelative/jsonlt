@@ -12,14 +12,14 @@
       {
         "type": "element_to_attribute",
         "path": ".person",
-        "source": "name",
-        "target": "fullName"
+        "source": "name.first",
+        "target": "firstName"
       }
     ]
   },
   "output": {
     "person": {
-      "fullName": "John"
+      "firstName": "John"
     }
   }
 }
