@@ -129,6 +129,8 @@ A demo HTML page is included in the `demo` folder. You can use this to test JSON
 1. Build the project: `npm run build`
 2. Open `demo/index.html` in your web browser
 
+Alternatively, you can try the online demo at: https://irrelative.github.io/jsonlt/
+
 ## Development
 
 To set up the development environment:
