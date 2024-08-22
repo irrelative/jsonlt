@@ -639,3 +639,75 @@ For the "replace" modification, you would use it like this:
 ```
 
 This would replace "john" with "Jane" in the "name" field.
+
+### 13. Copy Structure Transformation
+
+The Copy Structure transformation creates a copy of a specified part of the JSON structure and applies additional transformations to the copy.
+
+#### Inputs
+
+- `type` (required): String, must be "copy_structure"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `modifications` (required): Array of transformation objects, specifies the transformations to apply to the copied structure
+
+#### Output
+
+The transformation creates a copy of the structure at the specified `path` and applies the specified `modifications` to the copy. The original structure remains unchanged.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "country": "USA"
+    }
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "copy_structure",
+  "path": ".user",
+  "modifications": [
+    {
+      "type": "rename",
+      "path": ".",
+      "source": "name",
+      "target": "full_name"
+    },
+    {
+      "type": "remove",
+      "path": ".address",
+      "target": "street"
+    }
+  ]
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "country": "USA"
+    },
+    "full_name": "John Doe",
+    "address": {
+      "city": "Anytown",
+      "country": "USA"
+    }
+  }
+}
+```
+
+In this example, the entire "user" structure is copied. In the copy, the "name" field is renamed to "full_name", and the "street" field is removed from the "address" object. The original "user" structure remains unchanged, while the modified copy is added to the same level.
