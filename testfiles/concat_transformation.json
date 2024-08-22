@@ -1,0 +1,27 @@
+{
+  "input": {
+    "person": {
+      "firstName": "John",
+      "lastName": "Doe"
+    }
+  },
+  "jsonlt": {
+    "transformations": [
+      {
+        "type": "concat",
+        "path": ".person",
+        "source1": "firstName",
+        "source2": "lastName",
+        "target": "fullName",
+        "delimiter": " "
+      }
+    ]
+  },
+  "output": {
+    "person": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "fullName": "John Doe"
+    }
+  }
+}
