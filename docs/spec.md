@@ -350,3 +350,56 @@ Output JSON:
 ```
 
 In this example, the condition checks if the user's age is greater than 18. Since it is, the `true_transformation` is applied, adding a "status" field with the value "adult". If the age had been 18 or less, the `false_transformation` would have been applied instead, setting the status to "minor".
+
+### 8. Merge Transformation
+
+The Merge transformation combines multiple source fields into a single target field.
+
+#### Inputs
+
+- `type` (required): String, must be "merge"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `sources` (required): Array of strings, specifies the fields to be merged
+- `target` (required): String, the name of the new field that will contain the merged data
+
+#### Output
+
+The transformation modifies the input JSON by merging the specified source fields into a single target field at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "age": 30
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "merge",
+  "path": ".user",
+  "sources": ["first_name", "last_name"],
+  "target": "full_name"
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "full_name": {
+      "first_name": "John",
+      "last_name": "Doe"
+    },
+    "age": 30
+  }
+}
+```
+
+In this example, the "first_name" and "last_name" fields are merged into a new "full_name" object within the "user" object. The original source fields are removed after the merge.
