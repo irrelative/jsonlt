@@ -29,9 +29,7 @@ def element_to_attribute_transformation(data: Dict[str, Any], source: str, targe
         element, attribute = source_parts
         if element in data and isinstance(data[element], dict) and attribute in data[element]:
             data[target] = data[element][attribute]
-            del data[element][attribute]
-            if not data[element]:  # Remove the element if it's empty after transformation
-                del data[element]
+            del data[element]
     elif source in data and isinstance(data[source], dict):
         data[target] = next(iter(data[source].values()))
         del data[source]
