@@ -40,15 +40,16 @@ JSONLT Configuration:
       "target": "familyName"
     },
     {
-      "type": "merge",
+      "type": "concat",
       "path": ".person",
       "sources": ["givenName", "familyName"],
+      "delimiter": " ",
       "target": "fullName"
     },
     {
       "type": "modify_text",
-      "path": ".person.fullName",
-      "target": ".",
+      "path": ".person",
+      "target": "fullName",
       "modification": "title"
     },
     {
@@ -73,7 +74,7 @@ JSONLT Configuration:
       }
     },
     {
-      "type": "element_to_attribute",
+      "type": "rename",
       "path": ".person.address",
       "source": "country",
       "target": "countryCode"

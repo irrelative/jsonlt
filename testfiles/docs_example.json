@@ -1,17 +1,17 @@
 {
   "input": {
-  "person": {
-    "firstName": "john",
-    "lastName": "doe",
-    "age": 30,
-    "address": {
-      "street": "123 Main St",
-      "city": "Anytown",
-      "country": "USA"
-    },
-    "hobbies": ["reading", "cycling", "photography"]
-  }
-},
+    "person": {
+      "firstName": "john",
+      "lastName": "doe",
+      "age": 30,
+      "address": {
+        "street": "123 Main St",
+        "city": "Anytown",
+        "country": "USA"
+      },
+      "hobbies": ["reading", "cycling", "photography"]
+    }
+  },
   "jsonlt": {
       "transformations": [
         {
@@ -27,15 +27,16 @@
           "target": "familyName"
         },
         {
-          "type": "merge",
+          "type": "concat",
           "path": ".person",
           "sources": ["givenName", "familyName"],
+          "delimiter": " ",
           "target": "fullName"
         },
         {
           "type": "modify_text",
-          "path": ".person.fullName",
-          "target": ".",
+          "path": ".person",
+          "target": "fullName",
           "modification": "title"
         },
         {
@@ -60,7 +61,7 @@
           }
         },
         {
-          "type": "element_to_attribute",
+          "type": "rename",
           "path": ".person.address",
           "source": "country",
           "target": "countryCode"
