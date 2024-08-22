@@ -34,12 +34,6 @@ JSONLT Configuration:
       "target": "familyName"
     },
     {
-      "type": "add",
-      "path": ".person",
-      "target": "fullName",
-      "value": ""
-    },
-    {
       "type": "concat",
       "path": ".person",
       "sources": ["givenName", "familyName"],
