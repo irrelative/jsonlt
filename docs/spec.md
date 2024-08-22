@@ -75,3 +75,56 @@ Here's an example of a transformation using these common elements:
 ```
 
 This transformation would rename the "name" field to "fullName" within the "user.details" object of the JSON document.
+
+### 3. Rename Transformation
+
+The Rename transformation changes the name of a field in the JSON structure.
+
+#### Inputs
+
+- `type` (required): String, must be "rename"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `source` (required): String, the name of the field to be renamed
+- `target` (required): String, the new name for the field
+
+#### Output
+
+The transformation modifies the input JSON by changing the name of the specified field from `source` to `target` at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "personal_info": {
+      "first_name": "John",
+      "last_name": "Doe"
+    }
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "rename",
+  "path": "user.personal_info",
+  "source": "first_name",
+  "target": "given_name"
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "personal_info": {
+      "given_name": "John",
+      "last_name": "Doe"
+    }
+  }
+}
+```
+
+In this example, the "first_name" field is renamed to "given_name" within the "user.personal_info" object.
