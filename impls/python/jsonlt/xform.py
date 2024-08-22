@@ -195,6 +195,16 @@ def group_transformation(data: Dict[str, Any], source: str, target: str, group_b
         del data[source]
     return data
 
+def concat_transformation(data: Dict[str, Any], source1: str, source2: str, target: str, delimiter: Optional[str] = None) -> Dict[str, Any]:
+    if source1 in data and source2 in data:
+        value1 = str(data[source1])
+        value2 = str(data[source2])
+        if delimiter is not None:
+            data[target] = delimiter.join([value1, value2])
+        else:
+            data[target] = value1 + value2
+    return data
+
 def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -> Dict[str, Any]:
     """
     Apply a transformation function to a specific path in the data structure.
@@ -274,6 +284,8 @@ def apply_transformation(data: Dict[str, Any], transformation: Dict[str, Any]) -
         return apply_path(data, path, lambda x: copy_structure_transformation(x, transformation['modifications']))
     elif transformation_type == 'group':
         return apply_path(data, path, lambda x: group_transformation(x, transformation['source'], transformation['target'], transformation['group_by']))
+    elif transformation_type == 'concat':
+        return apply_path(data, path, lambda x: concat_transformation(x, transformation['source1'], transformation['source2'], transformation['target'], transformation.get('delimiter')))
     return data
 
 
