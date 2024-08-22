@@ -2,6 +2,7 @@
   "input": {
     "person": {
       "firstName": "John",
+      "middleName": "William",
       "lastName": "Doe"
     }
   },
@@ -10,8 +11,7 @@
       {
         "type": "concat",
         "path": ".person",
-        "source1": "firstName",
-        "source2": "lastName",
+        "sources": ["firstName", "middleName", "lastName"],
         "target": "fullName",
         "delimiter": " "
       }
@@ -20,8 +20,9 @@
   "output": {
     "person": {
       "firstName": "John",
+      "middleName": "William",
       "lastName": "Doe",
-      "fullName": "John Doe"
+      "fullName": "John William Doe"
     }
   }
 }
