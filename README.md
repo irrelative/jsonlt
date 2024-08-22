@@ -58,6 +58,61 @@ Output JSON:
 
 This example demonstrates renaming fields, adding a new field, and concatenating values.
 
+
+## Implementations
+
+Initial versions of this package will focus on a python implementation. When functionality is stable, other implementations in
+other langauges will be considered.
+
+
+## Installation
+
+```sh
+python setup.py install
+```
+
+
+## Usage
+
+Once installed the library can be used programmatically like so:
+
+```python
+import jsonlt
+
+inp = {"name": "Bob"}
+
+jlt = {
+    "transformations": [
+        {"type": "rename", "path": ".", "source": "name", "target": "new"}
+    ]
+}
+
+output = jsonlt.transform(inp, jlt)
+print(output)
+# {'new': 'Bob'}
+
+```
+
+There's also a CLI `jsonlt`:
+
+```sh
+jsonlt --help
+
+usage: jsonlt [-h] [-i] [-o OUTPUT] [input] [config]
+
+JSONLT: JSON Transformation Tool
+
+positional arguments:
+  input                 Input JSON file
+  config                JSONLT configuration file
+
+options:
+  -h, --help            show this help message and exit
+  -i, --interactive     Run in interactive mode
+  -o OUTPUT, --output OUTPUT
+                        Output JSON file (default: stdout)
+```
+
 ## Documentation
 For detailed usage instructions and examples of each transformation type, please refer to the [Usage Guide](docs/usage.md).
 
