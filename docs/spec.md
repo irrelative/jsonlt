@@ -232,3 +232,54 @@ Output JSON:
 ```
 
 In this example, the "name" attribute is converted into a nested "personal_info" element within the "user" object.
+
+### 6. Convert Element to Attribute Transformation
+
+The Convert Element to Attribute transformation changes a nested element of a JSON object into an attribute.
+
+#### Inputs
+
+- `type` (required): String, must be "element_to_attribute"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `source` (required): String, the name of the element to be converted
+- `target` (required): String, the name of the new attribute that will contain the element's value
+
+#### Output
+
+The transformation modifies the input JSON by converting the specified nested element into an attribute at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "personal_info": {
+      "name": "John Doe"
+    },
+    "age": 30
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "element_to_attribute",
+  "path": ".user",
+  "source": "personal_info.name",
+  "target": "full_name"
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "full_name": "John Doe",
+    "age": 30
+  }
+}
+```
+
+In this example, the nested "name" element within "personal_info" is converted into a "full_name" attribute of the "user" object.
