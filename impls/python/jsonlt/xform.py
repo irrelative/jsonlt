@@ -1,13 +1,16 @@
 # Transform json to json using jsonlt object
 
-from .schema_gen import JSONLT, Condition
-from typing import Any, Dict, List, Union, Optional, Callable
 import copy
 import operator
 from functools import reduce
+from typing import Any, Callable, Dict, List, Optional, Union
+
+from .schema_gen import JSONLT, Condition
 
 
-def rename_transformation(data: Dict[str, Any], source: str, target: str) -> Dict[str, Any]:
+def rename_transformation(
+    data: Dict[str, Any], source: str, target: str
+) -> Dict[str, Any]:
     if source in data:
         data[target] = data.pop(source)
     return data
@@ -17,17 +20,25 @@ def reorder_transformation(data: Dict[str, Any], order: List[str]) -> Dict[str, 
     return {key: data[key] for key in order if key in data}
 
 
-def attribute_to_element_transformation(data: Dict[str, Any], source: str, target: str) -> Dict[str, Any]:
+def attribute_to_element_transformation(
+    data: Dict[str, Any], source: str, target: str
+) -> Dict[str, Any]:
     if source in data:
         data[target] = {source: data.pop(source)}
     return data
 
 
-def element_to_attribute_transformation(data: Dict[str, Any], source: str, target: str) -> Dict[str, Any]:
-    source_parts = source.split('.')
+def element_to_attribute_transformation(
+    data: Dict[str, Any], source: str, target: str
+) -> Dict[str, Any]:
+    source_parts = source.split(".")
     if len(source_parts) == 2:
         element, attribute = source_parts
-        if element in data and isinstance(data[element], dict) and attribute in data[element]:
+        if (
+            element in data
+            and isinstance(data[element], dict)
+            and attribute in data[element]
+        ):
             data[target] = data[element][attribute]
             del data[element]
     elif source in data and isinstance(data[source], dict):
@@ -39,7 +50,7 @@ def element_to_attribute_transformation(data: Dict[str, Any], source: str, targe
 def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
     """
     Evaluate a condition against the given data.
-    
+
     This function uses a dictionary of operator functions to evaluate various
     conditions (equality, inequality, greater than, less than, etc.) on the data.
     It also handles nested conditions and resolves values from the data structure.
@@ -53,20 +64,20 @@ def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
         "le": operator.le,
         "and": lambda x, y: x and y,
         "or": lambda x, y: x or y,
-        "not": lambda x: not x
+        "not": lambda x: not x,
     }
 
     def resolve_value(value: Union[str, Condition], data: Dict[str, Any]) -> Any:
         """
         Resolve a value from the data structure or evaluate a nested condition.
-        
+
         If the value is a string, it's treated as a path to a value in the data.
         If it's a Condition, it's recursively evaluated.
         """
         if isinstance(value, Condition):
             return evaluate_condition(value, data)
         elif isinstance(value, str):
-            parts = value.split('.')
+            parts = value.split(".")
             current = data
             for part in parts:
                 if isinstance(current, dict) and part in current:
@@ -81,14 +92,22 @@ def evaluate_condition(condition: Condition, data: Dict[str, Any]) -> bool:
             return value
 
     left = resolve_value(condition.left, data)
-    right = resolve_value(condition.right, data) if condition.right is not None else None
+    right = (
+        resolve_value(condition.right, data) if condition.right is not None else None
+    )
 
     if condition.operator == "not":
         return ops[condition.operator](left)
     else:
         return ops[condition.operator](left, right)
 
-def conditional_transformation(data: Dict[str, Any], condition: Condition, true_transformation: Dict[str, Any], false_transformation: Dict[str, Any] = None) -> Dict[str, Any]:
+
+def conditional_transformation(
+    data: Dict[str, Any],
+    condition: Condition,
+    true_transformation: Dict[str, Any],
+    false_transformation: Dict[str, Any] = None,
+) -> Dict[str, Any]:
     if evaluate_condition(condition, data):
         return apply_transformation(data, true_transformation)
     elif false_transformation:
@@ -96,14 +115,17 @@ def conditional_transformation(data: Dict[str, Any], condition: Condition, true_
     return data
 
 
-def merge_transformation(data: Dict[str, Any], sources: List[str], target: str) -> Dict[str, Any]:
+def merge_transformation(
+    data: Dict[str, Any], sources: List[str], target: str
+) -> Dict[str, Any]:
     """
     Merge multiple source fields into a single target field.
-    
+
     This function recursively traverses the data structure, merging specified
     source fields into a single target field. It handles nested dictionaries
     and preserves the structure of non-source fields.
     """
+
     def merge_recursive(d: Dict[str, Any]) -> Dict[str, Any]:
         merged = {}
         new_d = {}
@@ -121,17 +143,21 @@ def merge_transformation(data: Dict[str, Any], sources: List[str], target: str) 
         if merged:
             new_d[target] = merged
         return new_d
+
     return merge_recursive(data)
 
 
-def split_transformation(data: Dict[str, Any], source: str, targets: List[str]) -> Dict[str, Any]:
+def split_transformation(
+    data: Dict[str, Any], source: str, targets: List[str]
+) -> Dict[str, Any]:
     """
     Split a source field into multiple target fields.
-    
+
     This function recursively traverses the data structure, splitting the specified
     source field (if it's a dictionary) into multiple target fields. It preserves
     the structure of other fields and handles nested dictionaries.
     """
+
     def split_recursive(d: Dict[str, Any]) -> Dict[str, Any]:
         if source in d and isinstance(d[source], dict):
             source_data = d.pop(source)
@@ -142,10 +168,13 @@ def split_transformation(data: Dict[str, Any], source: str, targets: List[str]) 
             if isinstance(value, dict):
                 d[key] = split_recursive(value)
         return d
+
     return split_recursive(data)
 
 
-def add_element_transformation(data: Dict[str, Any], target: str, value: Any) -> Dict[str, Any]:
+def add_element_transformation(
+    data: Dict[str, Any], target: str, value: Any
+) -> Dict[str, Any]:
     data[target] = value
     return data
 
@@ -156,10 +185,16 @@ def remove_element_transformation(data: Dict[str, Any], target: str) -> Dict[str
     return data
 
 
-def modify_text_transformation(data: Dict[str, Any], target: str, modification: str, replace_old: Optional[str] = None, replace_new: Optional[str] = None) -> Dict[str, Any]:
+def modify_text_transformation(
+    data: Dict[str, Any],
+    target: str,
+    modification: str,
+    replace_old: Optional[str] = None,
+    replace_new: Optional[str] = None,
+) -> Dict[str, Any]:
     """
     Modify the text of a target field based on the specified modification.
-    
+
     This function applies various text modifications (uppercase, lowercase,
     capitalize, title, strip, replace) to the target field if it exists and is a string.
     For the 'replace' modification, it requires both 'replace_old' and 'replace_new' parameters.
@@ -181,14 +216,18 @@ def modify_text_transformation(data: Dict[str, Any], target: str, modification: 
     return data
 
 
-def copy_structure_transformation(data: Dict[str, Any], modifications: List[Dict[str, Any]]) -> Dict[str, Any]:
+def copy_structure_transformation(
+    data: Dict[str, Any], modifications: List[Dict[str, Any]]
+) -> Dict[str, Any]:
     copied_data = copy.deepcopy(data)
     for modification in modifications:
         copied_data = apply_transformation(copied_data, modification)
     return copied_data  # Return the modified copy directly
 
 
-def group_transformation(data: Dict[str, Any], source: str, target: str, group_by: str) -> Dict[str, Any]:
+def group_transformation(
+    data: Dict[str, Any], source: str, target: str, group_by: str
+) -> Dict[str, Any]:
     if source in data and isinstance(data[source], list):
         grouped = {}
         for item in data[source]:
@@ -201,7 +240,13 @@ def group_transformation(data: Dict[str, Any], source: str, target: str, group_b
         del data[source]
     return data
 
-def concat_transformation(data: Dict[str, Any], sources: List[str], target: str, delimiter: Optional[str] = None) -> Dict[str, Any]:
+
+def concat_transformation(
+    data: Dict[str, Any],
+    sources: List[str],
+    target: str,
+    delimiter: Optional[str] = None,
+) -> Dict[str, Any]:
     values = []
     for source in sources:
         if source in data:
@@ -210,20 +255,23 @@ def concat_transformation(data: Dict[str, Any], sources: List[str], target: str,
         if delimiter is not None:
             data[target] = delimiter.join(values)
         else:
-            data[target] = ''.join(values)
+            data[target] = "".join(values)
     return data
 
-def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -> Dict[str, Any]:
+
+def apply_path(
+    data: Dict[str, Any], path: str, transformation_func: Callable
+) -> Dict[str, Any]:
     """
     Apply a transformation function to a specific path in the data structure.
-    
+
     This function navigates through the data structure based on the given path
     and applies the transformation function at the specified location. It handles
     root-level transformations, list transformations, and nested dictionary paths.
     """
     if path == ".":
         return transformation_func(data)
-    
+
     parts = path.split(".")
     current = data
     for i, part in enumerate(parts[1:]):  # Skip the first empty part
@@ -235,7 +283,11 @@ def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -
         elif part.endswith("]"):
             key, index = part[:-1].split("[")
             index = int(index)
-            if key in current and isinstance(current[key], list) and 0 <= index < len(current[key]):
+            if (
+                key in current
+                and isinstance(current[key], list)
+                and 0 <= index < len(current[key])
+            ):
                 current[key][index] = transformation_func(current[key][index])
             return data
         elif i == len(parts) - 2:  # Last part
@@ -246,62 +298,145 @@ def apply_path(data: Dict[str, Any], path: str, transformation_func: Callable) -
             if part not in current:
                 current[part] = {}
             current = current[part]
-    
+
     return data
 
 
-def apply_transformation(data: Dict[str, Any], transformation: Dict[str, Any]) -> Dict[str, Any]:
+def apply_transformation(
+    data: Dict[str, Any], transformation: Dict[str, Any]
+) -> Dict[str, Any]:
     """
     Apply a specific transformation to the data based on the transformation type.
-    
+
     This function acts as a dispatcher, calling the appropriate transformation
     function based on the 'type' specified in the transformation dictionary.
     It applies the transformation to the specified path in the data structure.
     """
-    transformation_type = transformation['type']
-    path = transformation.get('path', '.')
+    transformation_type = transformation["type"]
+    path = transformation.get("path", ".")
 
-    if transformation_type == 'rename':
-        return apply_path(data, path, lambda x: rename_transformation(x, transformation['source'], transformation['target']))
-    elif transformation_type == 'reorder':
-        return apply_path(data, path, lambda x: reorder_transformation(x, transformation['order']))
-    elif transformation_type == 'attribute_to_element':
-        return apply_path(data, path, lambda x: attribute_to_element_transformation(x, transformation['source'], transformation['target']))
-    elif transformation_type == 'element_to_attribute':
-        return apply_path(data, path, lambda x: element_to_attribute_transformation(x, transformation['source'], transformation['target']))
-    elif transformation_type == 'conditional':
-        condition = Condition(**transformation['condition'])
-        return apply_path(data, path, lambda x: conditional_transformation(x, condition, transformation['true_transformation'], transformation.get('false_transformation')))
-    elif transformation_type == 'merge':
-        return apply_path(data, path, lambda x: merge_transformation(x, transformation['sources'], transformation['target']))
-    elif transformation_type == 'split':
-        return apply_path(data, path, lambda x: split_transformation(x, transformation['source'], transformation['targets']))
-    elif transformation_type == 'add':
-        return apply_path(data, path, lambda x: add_element_transformation(x, transformation['target'], transformation['value']))
-    elif transformation_type == 'remove':
-        return apply_path(data, path, lambda x: remove_element_transformation(x, transformation['target']))
-    elif transformation_type == 'modify_text':
-        return apply_path(data, path, lambda x: modify_text_transformation(
-            x,
-            transformation['target'],
-            transformation['modification'],
-            transformation.get('replace_old'),
-            transformation.get('replace_new')
-        ))
-    elif transformation_type == 'copy_structure':
-        return apply_path(data, path, lambda x: copy_structure_transformation(x, transformation['modifications']))
-    elif transformation_type == 'group':
-        return apply_path(data, path, lambda x: group_transformation(x, transformation['source'], transformation['target'], transformation['group_by']))
-    elif transformation_type == 'concat':
-        return apply_path(data, path, lambda x: concat_transformation(x, transformation['sources'], transformation['target'], transformation.get('delimiter')))
+    if transformation_type == "rename":
+        return apply_path(
+            data,
+            path,
+            lambda x: rename_transformation(
+                x, transformation["source"], transformation["target"]
+            ),
+        )
+    elif transformation_type == "reorder":
+        return apply_path(
+            data, path, lambda x: reorder_transformation(x, transformation["order"])
+        )
+    elif transformation_type == "attribute_to_element":
+        return apply_path(
+            data,
+            path,
+            lambda x: attribute_to_element_transformation(
+                x, transformation["source"], transformation["target"]
+            ),
+        )
+    elif transformation_type == "element_to_attribute":
+        return apply_path(
+            data,
+            path,
+            lambda x: element_to_attribute_transformation(
+                x, transformation["source"], transformation["target"]
+            ),
+        )
+    elif transformation_type == "conditional":
+        condition = Condition(**transformation["condition"])
+        return apply_path(
+            data,
+            path,
+            lambda x: conditional_transformation(
+                x,
+                condition,
+                transformation["true_transformation"],
+                transformation.get("false_transformation"),
+            ),
+        )
+    elif transformation_type == "merge":
+        return apply_path(
+            data,
+            path,
+            lambda x: merge_transformation(
+                x, transformation["sources"], transformation["target"]
+            ),
+        )
+    elif transformation_type == "split":
+        return apply_path(
+            data,
+            path,
+            lambda x: split_transformation(
+                x, transformation["source"], transformation["targets"]
+            ),
+        )
+    elif transformation_type == "add":
+        return apply_path(
+            data,
+            path,
+            lambda x: add_element_transformation(
+                x, transformation["target"], transformation["value"]
+            ),
+        )
+    elif transformation_type == "remove":
+        return apply_path(
+            data,
+            path,
+            lambda x: remove_element_transformation(x, transformation["target"]),
+        )
+    elif transformation_type == "modify_text":
+        return apply_path(
+            data,
+            path,
+            lambda x: modify_text_transformation(
+                x,
+                transformation["target"],
+                transformation["modification"],
+                transformation.get("replace_old"),
+                transformation.get("replace_new"),
+            ),
+        )
+    elif transformation_type == "copy_structure":
+        return apply_path(
+            data,
+            path,
+            lambda x: copy_structure_transformation(x, transformation["modifications"]),
+        )
+    elif transformation_type == "group":
+        return apply_path(
+            data,
+            path,
+            lambda x: group_transformation(
+                x,
+                transformation["source"],
+                transformation["target"],
+                transformation["group_by"],
+            ),
+        )
+    elif transformation_type == "concat":
+        return apply_path(
+            data,
+            path,
+            lambda x: concat_transformation(
+                x,
+                transformation["sources"],
+                transformation["target"],
+                transformation.get("delimiter"),
+            ),
+        )
     return data
 
 
-def jsonlt_transform(json_data: Dict[str, Any], jsonlt_conf: Dict[str, Any]) -> Dict[str, Any]:
+def jsonlt_transform(
+    json_data: Dict[str, Any], jsonlt_conf: Dict[str, Any]
+) -> Dict[str, Any]:
     transformed_data = copy.deepcopy(json_data)
     jsonlt = JSONLT(**jsonlt_conf)
-    
+
     for transformation in jsonlt.transformations:
-        transformed_data = apply_transformation(transformed_data, transformation.model_dump())
-    
+        transformed_data = apply_transformation(
+            transformed_data, transformation.model_dump()
+        )
+
     return transformed_data

@@ -3,11 +3,12 @@ import os
 
 from jsonlt import transform
 
+
 def find_testfiles_folder():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     while True:
-        if 'testfiles' in os.listdir(current_dir):
-            return os.path.join(current_dir, 'testfiles')
+        if "testfiles" in os.listdir(current_dir):
+            return os.path.join(current_dir, "testfiles")
         parent_dir = os.path.dirname(current_dir)
         if parent_dir == current_dir:
             raise FileNotFoundError("Could not find 'testfiles' folder")

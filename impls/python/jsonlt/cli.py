@@ -1,7 +1,9 @@
 import argparse
 import json
 import sys
+
 from .xform import jsonlt_transform
+
 
 def interactive_mode():
     print("Enter your JSON input (press Enter twice to finish):")
@@ -26,9 +28,12 @@ def interactive_mode():
     print("\nTransformed JSON:")
     json.dump(result, sys.stdout, indent=2)
 
+
 def main():
     parser = argparse.ArgumentParser(description="JSONLT: JSON Transformation Tool")
-    parser.add_argument("-i", "--interactive", action="store_true", help="Run in interactive mode")
+    parser.add_argument(
+        "-i", "--interactive", action="store_true", help="Run in interactive mode"
+    )
     parser.add_argument("input", nargs="?", help="Input JSON file")
     parser.add_argument("config", nargs="?", help="JSONLT configuration file")
     parser.add_argument("-o", "--output", help="Output JSON file (default: stdout)")
@@ -43,23 +48,24 @@ def main():
         parser.error("Input and config files are required when not in interactive mode")
 
     try:
-        with open(args.input, 'r') as f:
+        with open(args.input, "r") as f:
             input_data = json.load(f)
-        
-        with open(args.config, 'r') as f:
+
+        with open(args.config, "r") as f:
             jsonlt_config = json.load(f)
-        
+
         result = jsonlt_transform(input_data, jsonlt_config)
-        
+
         if args.output:
-            with open(args.output, 'w') as f:
+            with open(args.output, "w") as f:
                 json.dump(result, f, indent=2)
         else:
             json.dump(result, sys.stdout, indent=2)
-    
+
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

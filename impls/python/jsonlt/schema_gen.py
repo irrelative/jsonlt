@@ -1,6 +1,7 @@
-from pydantic import BaseModel
-from typing import Union, Optional, Any, Literal
 from enum import Enum
+from typing import Any, Literal, Optional, Union
+
+from pydantic import BaseModel
 
 
 class TextModification(str, Enum):
@@ -49,6 +50,7 @@ class ConvertElementToAttribute(BaseModel):
 
 class Condition(BaseModel):
     """Model for condition representation"""
+
     operator: Literal["eq", "ne", "gt", "lt", "ge", "le", "and", "or", "not"]
     left: Union[str, "Condition"]
     right: Optional[Union[Any, "Condition"]] = None
@@ -60,7 +62,9 @@ class ConditionalTransformation(BaseModel):
     type: Literal["conditional"] = "conditional"
     path: str = "."
     condition: Condition
-    true_transformation: "Transformation"  # Recursively reference the Transformation model
+    true_transformation: (
+        "Transformation"  # Recursively reference the Transformation model
+    )
     false_transformation: Optional["Transformation"] = None
 
 
@@ -166,6 +170,7 @@ class JSONLT(BaseModel):
 
 if __name__ == "__main__":
     import json
+
     from pydantic.json_schema import model_json_schema
 
     json_schema = model_json_schema(JSONLT)

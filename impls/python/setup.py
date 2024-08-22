@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="jsonlt",
@@ -8,8 +8,8 @@ setup(
         "pydantic>=2.0.0",
     ],
     entry_points={
-        'console_scripts': [
-            'jsonlt=jsonlt.cli:main',
+        "console_scripts": [
+            "jsonlt=jsonlt.cli:main",
         ],
     },
     author="Your Name",
@@ -23,5 +23,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.7',
+    python_requires=">=3.7",
 )
