@@ -283,3 +283,70 @@ Output JSON:
 ```
 
 In this example, the nested "name" element within "personal_info" is converted into a "full_name" attribute of the "user" object.
+
+### 7. Conditional Transformation
+
+The Conditional transformation applies different transformations based on a specified condition.
+
+#### Inputs
+
+- `type` (required): String, must be "conditional"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `condition` (required): Object, specifies the condition to evaluate
+  - `operator` (required): String, one of "eq", "ne", "gt", "lt", "ge", "le", "and", "or", "not"
+  - `left` (required): String or nested condition object, the left operand or a nested condition
+  - `right` (optional): Any value or nested condition object, the right operand (not required for "not" operator)
+- `true_transformation` (required): Object, the transformation to apply if the condition is true
+- `false_transformation` (optional): Object, the transformation to apply if the condition is false
+
+#### Output
+
+The transformation evaluates the condition and applies either the `true_transformation` or `false_transformation` (if provided) based on the result.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "age": 25
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "conditional",
+  "path": ".user",
+  "condition": {
+    "operator": "gt",
+    "left": "age",
+    "right": 18
+  },
+  "true_transformation": {
+    "type": "add",
+    "target": "status",
+    "value": "adult"
+  },
+  "false_transformation": {
+    "type": "add",
+    "target": "status",
+    "value": "minor"
+  }
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "name": "John Doe",
+    "age": 25,
+    "status": "adult"
+  }
+}
+```
+
+In this example, the condition checks if the user's age is greater than 18. Since it is, the `true_transformation` is applied, adding a "status" field with the value "adult". If the age had been 18 or less, the `false_transformation` would have been applied instead, setting the status to "minor".
