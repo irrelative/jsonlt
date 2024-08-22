@@ -76,7 +76,7 @@ pip install jsonlt
 Alternatively, you can install from source:
 
 ```sh
-git clone https://github.com/your-repo/jsonlt.git
+git clone https://github.com/irrelative/jsonlt.git
 cd jsonlt
 python setup.py install
 ```
