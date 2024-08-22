@@ -96,7 +96,7 @@ function evaluateCondition(condition, data) {
   const right = condition.right !== undefined ? resolveValue(condition.right, data) : undefined;
 
   if (condition.operator === 'not') {
-    return ops[condition.operator](left);
+    return ops[condition.operator](evaluateCondition(condition.left, data));
   } else {
     return ops[condition.operator](left, right);
   }
