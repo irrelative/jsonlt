@@ -16,6 +16,7 @@ def find_testfiles_folder():
 
 def test_json_files():
     test_folder = find_testfiles_folder()
+    num_files_tested = 0
     for filename in os.listdir(test_folder):
         if filename.endswith(".json"):
             with open(os.path.join(test_folder, filename), "r") as file:
@@ -28,3 +29,6 @@ def test_json_files():
                 result = transform(input_data, jsonlt_conf)
 
                 assert result == expected_output, f"Test failed for {filename}"
+                num_files_tested += 1
+
+    assert num_files_tested > 0, "No test files found"
