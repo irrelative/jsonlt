@@ -45,11 +45,11 @@ Most transformations share some common elements:
 
 - **Type**: String
 - **Default**: "."
-- **Description**: Specifies the location in the JSON structure where the transformation should be applied. The path uses dot notation to navigate nested structures. 
+- **Description**: Specifies the location in the JSON structure where the transformation should be applied. The path uses dot notation to navigate nested structures and must always start with a ".". 
   - "." represents the root of the JSON document.
-  - "field.subfield" would target a nested object.
-  - "array[]" applies the transformation to all elements of an array.
-  - "array[0]" targets a specific array index.
+  - ".field.subfield" would target a nested object.
+  - ".array[]" applies the transformation to all elements of an array.
+  - ".array[0]" targets a specific array index.
 
 #### source
 
@@ -68,7 +68,7 @@ Here's an example of a transformation using these common elements:
 ```json
 {
   "type": "rename",
-  "path": "user.details",
+  "path": ".user.details",
   "source": "name",
   "target": "fullName"
 }
@@ -109,7 +109,7 @@ Transformation:
 ```json
 {
   "type": "rename",
-  "path": "user.personal_info",
+  "path": ".user.personal_info",
   "source": "first_name",
   "target": "given_name"
 }
