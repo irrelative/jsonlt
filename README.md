@@ -67,33 +67,47 @@ other langauges will be considered.
 
 ## Installation
 
+To install JSONLT, you can use pip:
+
 ```sh
+pip install jsonlt
+```
+
+Alternatively, you can install from source:
+
+```sh
+git clone https://github.com/your-repo/jsonlt.git
+cd jsonlt
 python setup.py install
 ```
 
-
 ## Usage
 
-Once installed the library can be used programmatically like so:
+JSONLT can be used both programmatically and via a command-line interface (CLI).
+
+### Programmatic Usage
+
+Here's an example of how to use JSONLT in your Python code:
 
 ```python
 import jsonlt
 
-inp = {"name": "Bob"}
+input_data = {"name": "Bob"}
 
-jlt = {
+jsonlt_config = {
     "transformations": [
-        {"type": "rename", "path": ".", "source": "name", "target": "new"}
+        {"type": "rename", "path": ".", "source": "name", "target": "fullName"}
     ]
 }
 
-output = jsonlt.transform(inp, jlt)
+output = jsonlt.transform(input_data, jsonlt_config)
 print(output)
-# {'new': 'Bob'}
-
+# Output: {'fullName': 'Bob'}
 ```
 
-There's also a CLI `jsonlt`:
+### Command-Line Interface
+
+JSONLT also provides a CLI for easy use:
 
 ```sh
 jsonlt --help
@@ -112,6 +126,14 @@ options:
   -o OUTPUT, --output OUTPUT
                         Output JSON file (default: stdout)
 ```
+
+Example usage:
+
+```sh
+jsonlt input.json config.json -o output.json
+```
+
+This command will transform the JSON in `input.json` according to the configuration in `config.json` and save the result to `output.json`.
 
 ## Documentation
 For detailed usage instructions and examples of each transformation type, please refer to the [Usage Guide](docs/usage.md).
