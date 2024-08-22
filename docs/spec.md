@@ -770,3 +770,57 @@ Output JSON:
 ```
 
 In this example, the "products" array is grouped by the "category" field. The resulting grouped structure is stored in a new "grouped_products" field, where each key represents a category, and the corresponding value is an array of products in that category.
+
+### 15. Concat Transformation
+
+The Concat transformation combines the values of multiple fields into a single field, optionally using a delimiter.
+
+#### Inputs
+
+- `type` (required): String, must be "concat"
+- `path` (optional): String, default is ".", specifies where in the JSON structure to apply the transformation
+- `sources` (required): Array of strings, specifies the fields to be concatenated
+- `target` (required): String, the name of the new field that will contain the concatenated data
+- `delimiter` (optional): String, the delimiter to use between concatenated values
+
+#### Output
+
+The transformation modifies the input JSON by concatenating the values of the specified source fields into a single target field at the location specified by `path`.
+
+#### Example
+
+Input JSON:
+```json
+{
+  "user": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "title": "Mr."
+  }
+}
+```
+
+Transformation:
+```json
+{
+  "type": "concat",
+  "path": ".user",
+  "sources": ["title", "first_name", "last_name"],
+  "target": "full_name",
+  "delimiter": " "
+}
+```
+
+Output JSON:
+```json
+{
+  "user": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "title": "Mr.",
+    "full_name": "Mr. John Doe"
+  }
+}
+```
+
+In this example, the "title", "first_name", and "last_name" fields are concatenated into a new "full_name" field within the "user" object, using a space as the delimiter. The original source fields remain unchanged.
