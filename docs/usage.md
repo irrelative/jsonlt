@@ -327,6 +327,23 @@ Example:
 
 This will group the "employees" array into a "departments" object, with each department as a key containing an array of employees in that department.
 
+## 13. Concat Transformation
+
+This transformation concatenates multiple fields into a single field.
+
+Example:
+```json
+{
+  "type": "concat",
+  "path": ".",
+  "sources": ["firstName", "lastName"],
+  "target": "fullName",
+  "delimiter": " "
+}
+```
+
+This will concatenate the "firstName" and "lastName" fields into a single "fullName" field, using a space as the delimiter.
+
 Remember that you can use the "path" field in each transformation to specify where in your JSON structure the transformation should be applied. The "path" value must always start with a dot (`.`). For example:
 
 - `.` applies the transformation at the root level (default)
