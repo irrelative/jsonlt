@@ -61,79 +61,82 @@ This example demonstrates renaming fields, adding a new field, and concatenating
 
 ## Implementations
 
-Initial versions of this package will focus on a python implementation. When functionality is stable, other implementations in
-other langauges will be considered.
-
+JSONLT is currently implemented in Python and JavaScript. This README focuses on the JavaScript implementation.
 
 ## Installation
 
-To install JSONLT, you can use pip:
+To install the JavaScript version of JSONLT, you can use npm:
 
 ```sh
-pip install jsonlt
+npm install jsonlt
 ```
 
-Alternatively, you can install from source:
+Alternatively, you can include the built JavaScript file directly in your HTML:
 
-```sh
-git clone https://github.com/irrelative/jsonlt.git
-cd jsonlt
-python setup.py install
+```html
+<script src="path/to/jsonlt.js"></script>
 ```
 
 ## Usage
 
-JSONLT can be used both programmatically and via a command-line interface (CLI).
+JSONLT can be used both in Node.js and in the browser.
 
-### Programmatic Usage
+### Node.js Usage
 
-Here's an example of how to use JSONLT in your Python code:
+Here's an example of how to use JSONLT in your Node.js code:
 
-```python
-import jsonlt
+```javascript
+const JSONLT = require('jsonlt');
 
-input_data = {"name": "Bob"}
+const inputData = { name: "Bob" };
 
-jsonlt_config = {
-    "transformations": [
-        {"type": "rename", "path": ".", "source": "name", "target": "fullName"}
+const jsonltConfig = {
+    transformations: [
+        { type: "rename", path: ".", source: "name", target: "fullName" }
     ]
-}
+};
 
-output = jsonlt.transform(input_data, jsonlt_config)
-print(output)
-# Output: {'fullName': 'Bob'}
+const output = JSONLT.transform(inputData, jsonltConfig);
+console.log(output);
+// Output: { fullName: 'Bob' }
 ```
 
-### Command-Line Interface
+### Browser Usage
 
-JSONLT also provides a CLI for easy use:
+When using JSONLT in the browser, the `JSONLT` object is made available globally:
 
-```sh
-jsonlt --help
+```html
+<script src="path/to/jsonlt.js"></script>
+<script>
+    const inputData = { name: "Bob" };
 
-usage: jsonlt [-h] [-i] [-o OUTPUT] [input] [config]
+    const jsonltConfig = {
+        transformations: [
+            { type: "rename", path: ".", source: "name", target: "fullName" }
+        ]
+    };
 
-JSONLT: JSON Transformation Tool
-
-positional arguments:
-  input                 Input JSON file
-  config                JSONLT configuration file
-
-options:
-  -h, --help            show this help message and exit
-  -i, --interactive     Run in interactive mode
-  -o OUTPUT, --output OUTPUT
-                        Output JSON file (default: stdout)
+    const output = JSONLT.transform(inputData, jsonltConfig);
+    console.log(output);
+    // Output: { fullName: 'Bob' }
+</script>
 ```
 
-Example usage:
+### Demo Page
 
-```sh
-jsonlt input.json config.json -o output.json
-```
+A demo HTML page is included in the `demo` folder. You can use this to test JSONLT transformations in your browser. To use the demo:
 
-This command will transform the JSON in `input.json` according to the configuration in `config.json` and save the result to `output.json`.
+1. Build the project: `npm run build`
+2. Open `demo/index.html` in your web browser
+
+## Development
+
+To set up the development environment:
+
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Use `npm test` to run the test suite
+4. Use `npm run build` to build the distribution file
 
 ## Documentation
 For detailed usage instructions and examples of each transformation type, please refer to the [Usage Guide](docs/usage.md).
