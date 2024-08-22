@@ -35,6 +35,8 @@ Each transformation object in the `transformations` array represents a specific 
 
 Transformations are the core components of JSONLT. Each transformation is represented by a JSON object that specifies the type of operation to perform and any necessary parameters.
 
+Transformations are executed sequentially in the order they appear in the `transformations` array. This sequential execution allows you to use the results of earlier transformations in subsequent steps, enabling complex, multi-step transformations of your JSON data.
+
 ### Common Elements
 
 Most transformations share some common elements:
